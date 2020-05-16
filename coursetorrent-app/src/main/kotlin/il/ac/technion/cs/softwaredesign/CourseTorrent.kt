@@ -6,6 +6,7 @@ import TorrentList
 import TorrentParser
 import com.google.inject.Inject
 import il.ac.technion.cs.softwaredesign.exceptions.TrackerException
+import java.net.URL
 
 /**
  * This is the class implementing CourseTorrent, a BitTorrent client.
@@ -114,8 +115,15 @@ class CourseTorrent @Inject constructor(private val dbManager: DB_Manager) {
      * @throws IllegalArgumentException If [infohash] is not loaded.
      * @return The interval in seconds that the client should wait before announcing again.
      */
-    fun announce(infohash: String, event: TorrentEvent, uploaded: Long, downloaded: Long, left: Long): Int =
-        TODO("Implement me!")
+    fun announce(infohash: String, event: TorrentEvent, uploaded: Long, downloaded: Long, left: Long): Int{
+        if(!dbManager.exists(infohash))
+            throw java.lang.IllegalArgumentException()
+        val announce_list = announces(infohash = infohash)
+        if(event == TorrentEvent.STARTED)
+            announce_list.shuffled()
+        var tracker = announce_list[0][0]
+        return URL(tracker).readText().toInt()
+    }
 
     /**
      * Scrape all trackers identified by a torrent, and store the statistics provided. The specification for the scrape
