@@ -6,6 +6,7 @@ import TorrentList
 import TorrentParser
 import com.google.inject.Inject
 import il.ac.technion.cs.softwaredesign.exceptions.TrackerException
+import java.net.HttpURLConnection
 import java.net.URL
 
 /**
@@ -122,7 +123,20 @@ class CourseTorrent @Inject constructor(private val dbManager: DB_Manager) {
         if(event == TorrentEvent.STARTED)
             announce_list.shuffled()
         var tracker = announce_list[0][0]
-        return URL(tracker).readText().toInt()
+        val url = URL(tracker)
+
+        with(url.openConnection() as HttpURLConnection) {
+            requestMethod = "GET"  // optional default is GET
+
+            println("\nSent 'GET' request to URL : $url; Response Code : $responseCode")
+
+            inputStream.bufferedReader().use {
+                it.lines().forEach { line ->
+                    println(line)
+                }
+            }
+        }
+        return 3
     }
 
     /**
