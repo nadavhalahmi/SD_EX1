@@ -1,5 +1,10 @@
 package il.ac.technion.cs.softwaredesign
 
+import DB_Manager
+import TorrentDict
+import TorrentList
+import TorrentParser
+import com.google.inject.Inject
 import il.ac.technion.cs.softwaredesign.exceptions.TrackerException
 
 /**
@@ -9,7 +14,8 @@ import il.ac.technion.cs.softwaredesign.exceptions.TrackerException
  * + Parsing torrent metainfo files (".torrent" files)
  * + Communication with trackers (announce, scrape).
  */
-class CourseTorrent {
+class CourseTorrent @Inject constructor(private val dbManager: DB_Manager) {
+    private val parser = TorrentParser()
     /**
      * Load in the torrent metainfo file from [torrent]. The specification for these files can be found here:
      * [Metainfo File Structure](https://wiki.theory.org/index.php/BitTorrentSpecification#Metainfo_File_Structure).
@@ -22,7 +28,23 @@ class CourseTorrent {
      * @throws IllegalStateException If the infohash of [torrent] is already loaded.
      * @return The infohash of the torrent, i.e., the SHA-1 of the `info` key of [torrent].
      */
-    fun load(torrent: ByteArray): String = TODO("Implement me!")
+    fun load(torrent: ByteArray): String {
+        val infoValue: ByteArray
+        val dict: TorrentDict
+        try {
+            //infoValue = parser.getValueByKey(torrent, "info")
+            dict = parser.parse(torrent)
+            val infoRange = dict.getRange("info")
+            infoValue = torrent.copyOfRange(infoRange.startIndex(), infoRange.endIndex())
+        }catch (e: Exception){
+            throw IllegalArgumentException()
+        }
+        val infohash = parser.SHAsum(infoValue)
+        if(dbManager.exists(infohash))
+            throw IllegalStateException()
+        dbManager.add(infohash, torrent, dict)
+        return infohash
+    }
 
     /**
      * Remove the torrent identified by [infohash] from the system.
@@ -31,7 +53,11 @@ class CourseTorrent {
      *
      * @throws IllegalArgumentException If [infohash] is not loaded.
      */
-    fun unload(infohash: String): Unit = TODO("Implement me!")
+    fun unload(infohash: String): Unit {
+        if(!dbManager.exists(infohash))
+            throw IllegalArgumentException()
+        dbManager.delete(infohash)
+    }
 
     /**
      * Return the announce URLs for the loaded torrent identified by [infohash].
@@ -46,7 +72,17 @@ class CourseTorrent {
      * @throws IllegalArgumentException If [infohash] is not loaded.
      * @return Tier lists of announce URLs.
      */
-    fun announces(infohash: String): List<List<String>> = TODO("Implement me!")
+    fun announces(infohash: String): List<List<String>> {
+        var lst: ByteArray? = dbManager.get(infohash, "announce-list")
+        if(lst === null) {
+            lst = dbManager.get(infohash, "announce")
+            if (lst === null)
+                throw IllegalArgumentException()
+            else
+                lst = "ll".toByteArray(Charsets.UTF_8) + lst + "ee".toByteArray(Charsets.UTF_8)
+        }
+        return ((parser.parseList(lst).value() as TorrentList).toList() as List<List<String>>)
+    }
 
     /**
      * Send an "announce" HTTP request to a single tracker of the torrent identified by [infohash], and update the
