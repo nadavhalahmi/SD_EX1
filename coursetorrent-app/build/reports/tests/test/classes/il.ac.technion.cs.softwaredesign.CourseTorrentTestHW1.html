@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">2.833s</div>
+<div class="counter">4.286s</div>
 <p>duration</p>
 </div>
 </td>
@@ -73,31 +73,13 @@
 <a name="after announce, client has up-to-date peer list()"></a>
 <h3 class="failures">after announce, client has up-to-date peer list()</h3>
 <span class="code">
-<pre>java.net.ConnectException: Connection refused: connect
-	at java.base/sun.nio.ch.Net.connect0(Native Method)
-	at java.base/sun.nio.ch.Net.connect(Net.java:503)
-	at java.base/sun.nio.ch.Net.connect(Net.java:492)
-	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:588)
-	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:333)
-	at java.base/java.net.Socket.connect(Socket.java:648)
-	at java.base/sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:290)
-	at java.base/sun.security.ssl.BaseSSLSocketImpl.connect(BaseSSLSocketImpl.java:173)
-	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:182)
-	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:474)
-	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:569)
-	at java.base/sun.net.www.protocol.https.HttpsClient.&lt;init&gt;(HttpsClient.java:265)
-	at java.base/sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:372)
-	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:177)
-	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1194)
-	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1082)
-	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:163)
-	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1595)
-	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1523)
-	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:224)
-	at java.base/java.net.URL.openStream(URL.java:1167)
-	at kotlin.io.TextStreamsKt.readBytes(ReadWrite.kt:150)
-	at il.ac.technion.cs.softwaredesign.CourseTorrent.announce(CourseTorrent.kt:147)
-	at il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1.after announce, client has up-to-date peer list(CourseTorrentTestHW1.kt:78)
+<pre>java.lang.NumberFormatException: For input string: &quot;-17-65&quot;
+	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:68)
+	at java.base/java.lang.Integer.parseInt(Integer.java:652)
+	at java.base/java.lang.Integer.parseInt(Integer.java:770)
+	at Coder.get_ip_port(Coder.kt:45)
+	at il.ac.technion.cs.softwaredesign.CourseTorrent.knownPeers(CourseTorrent.kt:228)
+	at il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1.after announce, client has up-to-date peer list(CourseTorrentTestHW1.kt:87)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -193,13 +175,11 @@
 <a name="client scrapes tracker and updates statistics()"></a>
 <h3 class="failures">client scrapes tracker and updates statistics()</h3>
 <span class="code">
-<pre>org.opentest4j.AssertionFailedError: Unexpected exception thrown: kotlin.NotImplementedError: An operation is not implemented: Implement me!
-	at org.junit.jupiter.api.AssertDoesNotThrow.createAssertionFailedError(AssertDoesNotThrow.java:83)
-	at org.junit.jupiter.api.AssertDoesNotThrow.assertDoesNotThrow(AssertDoesNotThrow.java:76)
-	at org.junit.jupiter.api.AssertDoesNotThrow.assertDoesNotThrow(AssertDoesNotThrow.java:59)
-	at org.junit.jupiter.api.Assertions.assertDoesNotThrow(Assertions.java:3065)
-	at org.junit.jupiter.api.AssertionsKt.assertDoesNotThrow(Assertions.kt:139)
-	at il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1.client scrapes tracker and updates statistics(CourseTorrentTestHW1.kt:64)
+<pre>java.lang.AssertionError: expected: a value that is equal to {&quot;http://bttracker.debian.org:6969/announce&quot;:Scrape(complete=783, downloaded=18230, incomplete=3, name=null)}
+but was: {&quot;http://bttracker.debian.org:6969/announce&quot;:Scrape(complete=793, downloaded=18230, incomplete=2, name=null)}
+	at com.natpryce.hamkrest.assertion.AssertKt.assertThat(assert.kt:19)
+	at com.natpryce.hamkrest.assertion.AssertKt.assertThat$default(assert.kt:16)
+	at il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1.client scrapes tracker and updates statistics(CourseTorrentTestHW1.kt:67)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -288,13 +268,6 @@
 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:630)
 	at org.gradle.internal.concurrent.ThreadFactoryImpl$ManagedThreadRunnable.run(ThreadFactoryImpl.java:56)
 	at java.base/java.lang.Thread.run(Thread.java:832)
-Caused by: kotlin.NotImplementedError: An operation is not implemented: Implement me!
-	at il.ac.technion.cs.softwaredesign.CourseTorrent.scrape(CourseTorrent.kt:166)
-	at il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1$client scrapes tracker and updates statistics$1.invoke(CourseTorrentTestHW1.kt:64)
-	at il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1$client scrapes tracker and updates statistics$1.invoke(CourseTorrentTestHW1.kt:12)
-	at org.junit.jupiter.api.AssertionsKt$sam$org_junit_jupiter_api_function_ThrowingSupplier$0.get(Assertions.kt)
-	at org.junit.jupiter.api.AssertDoesNotThrow.assertDoesNotThrow(AssertDoesNotThrow.java:72)
-	... 92 more
 </pre>
 </span>
 </div>
@@ -326,7 +299,7 @@ Caused by: kotlin.NotImplementedError: An operation is not implemented: Implemen
 	at java.base/java.net.URL.openStream(URL.java:1167)
 	at kotlin.io.TextStreamsKt.readBytes(ReadWrite.kt:150)
 	at il.ac.technion.cs.softwaredesign.CourseTorrent.announce(CourseTorrent.kt:147)
-	at il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1.peers are invalidated correctly(CourseTorrentTestHW1.kt:100)
+	at il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1.peers are invalidated correctly(CourseTorrentTestHW1.kt:103)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -431,12 +404,12 @@ Caused by: kotlin.NotImplementedError: An operation is not implemented: Implemen
 </thead>
 <tr>
 <td class="failures">after announce, client has up-to-date peer list()</td>
-<td class="failures">1.019s</td>
+<td class="failures">1.285s</td>
 <td class="failures">failed</td>
 </tr>
 <tr>
 <td class="success">after load, announce is correct()</td>
-<td class="success">0.052s</td>
+<td class="success">0.018s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -446,17 +419,17 @@ Caused by: kotlin.NotImplementedError: An operation is not implemented: Implemen
 </tr>
 <tr>
 <td class="success">client announces to tracker()</td>
-<td class="success">0.435s</td>
+<td class="success">0.913s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="failures">client scrapes tracker and updates statistics()</td>
-<td class="failures">0.013s</td>
+<td class="failures">0.555s</td>
 <td class="failures">failed</td>
 </tr>
 <tr>
 <td class="failures">peers are invalidated correctly()</td>
-<td class="failures">1.308s</td>
+<td class="failures">1.509s</td>
 <td class="failures">failed</td>
 </tr>
 </table>
@@ -469,7 +442,7 @@ Caused by: kotlin.NotImplementedError: An operation is not implemented: Implemen
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 6.3</a> at 17 במאי 2020, 13:44:53</p>
+<a href="http://www.gradle.org">Gradle 6.3</a> at 17 במאי 2020, 21:31:30</p>
 </div>
 </div>
 </body>

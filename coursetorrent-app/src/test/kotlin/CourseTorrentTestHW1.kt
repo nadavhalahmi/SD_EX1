@@ -58,21 +58,24 @@ class CourseTorrentTestHW1 {
 
     @Test
     fun `client scrapes tracker and updates statistics`() {
-        val infohash = torrent.load(lame)
+        //val infohash = torrent.load(lame)
+        val infohash = torrent.load(debian)
 
         /* Tracker has infohash, 0 complete, 0 downloaded, 0 incomplete, no name key */
         assertDoesNotThrow { torrent.scrape(infohash) }
 
         assertThat(
             torrent.trackerStats(infohash),
-            equalTo(mapOf(Pair("https://127.0.0.1:8082/announce", Scrape(0, 0, 0, null) as ScrapeData)))
+            equalTo(mapOf(Pair("http://bttracker.debian.org:6969/announce", Scrape(783, 18230, 3, null) as ScrapeData)))
+            //equalTo(mapOf(Pair("https://127.0.0.1:8082/announce", Scrape(0, 0, 0, null) as ScrapeData)))
         )
         /* Assertion to verify that the tracker was actually called */
     }
 
     @Test
     fun `after announce, client has up-to-date peer list`() {
-        val infohash = torrent.load(lame)
+        //val infohash = torrent.load(lame)
+        val infohash = torrent.load(debian)
 
         /* Returned peer list is: [("127.0.0.22", 6887)] */
         torrent.announce(infohash, TorrentEvent.STARTED, 0, 0, 2703360)

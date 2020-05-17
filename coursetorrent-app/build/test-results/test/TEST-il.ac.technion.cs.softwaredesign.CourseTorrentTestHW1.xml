@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" tests="6" skipped="0" failures="3" errors="0" timestamp="2020-05-17T10:44:50" hostname="TP13-01" time="2.92">
+<testsuite name="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" tests="6" skipped="0" failures="3" errors="0" timestamp="2020-05-17T18:31:25" hostname="TP13-01" time="4.336">
   <properties/>
-  <testcase name="client announces to tracker()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" time="0.435"/>
+  <testcase name="client announces to tracker()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" time="0.913"/>
   <testcase name="after load, infohash calculated correctly()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" time="0.006"/>
-  <testcase name="peers are invalidated correctly()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" time="1.308">
+  <testcase name="peers are invalidated correctly()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" time="1.509">
     <failure message="java.net.ConnectException: Connection refused: connect" type="java.net.ConnectException">java.net.ConnectException: Connection refused: connect
 	at java.base/sun.nio.ch.Net.connect0(Native Method)
 	at java.base/sun.nio.ch.Net.connect(Net.java:503)
@@ -28,7 +28,7 @@
 	at java.base/java.net.URL.openStream(URL.java:1167)
 	at kotlin.io.TextStreamsKt.readBytes(ReadWrite.kt:150)
 	at il.ac.technion.cs.softwaredesign.CourseTorrent.announce(CourseTorrent.kt:147)
-	at il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1.peers are invalidated correctly(CourseTorrentTestHW1.kt:100)
+	at il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1.peers are invalidated correctly(CourseTorrentTestHW1.kt:103)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -119,14 +119,12 @@
 	at java.base/java.lang.Thread.run(Thread.java:832)
 </failure>
   </testcase>
-  <testcase name="client scrapes tracker and updates statistics()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" time="0.013">
-    <failure message="org.opentest4j.AssertionFailedError: Unexpected exception thrown: kotlin.NotImplementedError: An operation is not implemented: Implement me!" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: Unexpected exception thrown: kotlin.NotImplementedError: An operation is not implemented: Implement me!
-	at org.junit.jupiter.api.AssertDoesNotThrow.createAssertionFailedError(AssertDoesNotThrow.java:83)
-	at org.junit.jupiter.api.AssertDoesNotThrow.assertDoesNotThrow(AssertDoesNotThrow.java:76)
-	at org.junit.jupiter.api.AssertDoesNotThrow.assertDoesNotThrow(AssertDoesNotThrow.java:59)
-	at org.junit.jupiter.api.Assertions.assertDoesNotThrow(Assertions.java:3065)
-	at org.junit.jupiter.api.AssertionsKt.assertDoesNotThrow(Assertions.kt:139)
-	at il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1.client scrapes tracker and updates statistics(CourseTorrentTestHW1.kt:64)
+  <testcase name="client scrapes tracker and updates statistics()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" time="0.555">
+    <failure message="java.lang.AssertionError: expected: a value that is equal to {&quot;http://bttracker.debian.org:6969/announce&quot;:Scrape(complete=783, downloaded=18230, incomplete=3, name=null)}&#10;but was: {&quot;http://bttracker.debian.org:6969/announce&quot;:Scrape(complete=793, downloaded=18230, incomplete=2, name=null)}" type="java.lang.AssertionError">java.lang.AssertionError: expected: a value that is equal to {&quot;http://bttracker.debian.org:6969/announce&quot;:Scrape(complete=783, downloaded=18230, incomplete=3, name=null)}
+but was: {&quot;http://bttracker.debian.org:6969/announce&quot;:Scrape(complete=793, downloaded=18230, incomplete=2, name=null)}
+	at com.natpryce.hamkrest.assertion.AssertKt.assertThat(assert.kt:19)
+	at com.natpryce.hamkrest.assertion.AssertKt.assertThat$default(assert.kt:16)
+	at il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1.client scrapes tracker and updates statistics(CourseTorrentTestHW1.kt:67)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -215,42 +213,17 @@
 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:630)
 	at org.gradle.internal.concurrent.ThreadFactoryImpl$ManagedThreadRunnable.run(ThreadFactoryImpl.java:56)
 	at java.base/java.lang.Thread.run(Thread.java:832)
-Caused by: kotlin.NotImplementedError: An operation is not implemented: Implement me!
-	at il.ac.technion.cs.softwaredesign.CourseTorrent.scrape(CourseTorrent.kt:166)
-	at il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1$client scrapes tracker and updates statistics$1.invoke(CourseTorrentTestHW1.kt:64)
-	at il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1$client scrapes tracker and updates statistics$1.invoke(CourseTorrentTestHW1.kt:12)
-	at org.junit.jupiter.api.AssertionsKt$sam$org_junit_jupiter_api_function_ThrowingSupplier$0.get(Assertions.kt)
-	at org.junit.jupiter.api.AssertDoesNotThrow.assertDoesNotThrow(AssertDoesNotThrow.java:72)
-	... 92 more
 </failure>
   </testcase>
-  <testcase name="after load, announce is correct()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" time="0.052"/>
-  <testcase name="after announce, client has up-to-date peer list()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" time="1.019">
-    <failure message="java.net.ConnectException: Connection refused: connect" type="java.net.ConnectException">java.net.ConnectException: Connection refused: connect
-	at java.base/sun.nio.ch.Net.connect0(Native Method)
-	at java.base/sun.nio.ch.Net.connect(Net.java:503)
-	at java.base/sun.nio.ch.Net.connect(Net.java:492)
-	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:588)
-	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:333)
-	at java.base/java.net.Socket.connect(Socket.java:648)
-	at java.base/sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:290)
-	at java.base/sun.security.ssl.BaseSSLSocketImpl.connect(BaseSSLSocketImpl.java:173)
-	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:182)
-	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:474)
-	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:569)
-	at java.base/sun.net.www.protocol.https.HttpsClient.&lt;init&gt;(HttpsClient.java:265)
-	at java.base/sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:372)
-	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:177)
-	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1194)
-	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1082)
-	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:163)
-	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1595)
-	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1523)
-	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:224)
-	at java.base/java.net.URL.openStream(URL.java:1167)
-	at kotlin.io.TextStreamsKt.readBytes(ReadWrite.kt:150)
-	at il.ac.technion.cs.softwaredesign.CourseTorrent.announce(CourseTorrent.kt:147)
-	at il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1.after announce, client has up-to-date peer list(CourseTorrentTestHW1.kt:78)
+  <testcase name="after load, announce is correct()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" time="0.018"/>
+  <testcase name="after announce, client has up-to-date peer list()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" time="1.285">
+    <failure message="java.lang.NumberFormatException: For input string: &quot;-17-65&quot;" type="java.lang.NumberFormatException">java.lang.NumberFormatException: For input string: &quot;-17-65&quot;
+	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:68)
+	at java.base/java.lang.Integer.parseInt(Integer.java:652)
+	at java.base/java.lang.Integer.parseInt(Integer.java:770)
+	at Coder.get_ip_port(Coder.kt:45)
+	at il.ac.technion.cs.softwaredesign.CourseTorrent.knownPeers(CourseTorrent.kt:228)
+	at il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1.after announce, client has up-to-date peer list(CourseTorrentTestHW1.kt:87)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

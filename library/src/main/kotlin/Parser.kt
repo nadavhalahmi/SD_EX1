@@ -52,7 +52,7 @@ class TorrentParser {
      * example: 3:one returns:
      * TorrentElement("one", [startIndex], [startIndex]+3)
      */
-    private fun parseString(torrent: ByteArray, startIndex: Int): TorrentElement {
+    public fun parseString(torrent: ByteArray, startIndex: Int = 0): TorrentElement {
         assert(torrent[startIndex].toChar() in '0'..'9')
         var pairLen = 0
         var res: String = parseBytes(torrent, startIndex) {torrent[it].toChar() == ':'}

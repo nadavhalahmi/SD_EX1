@@ -21,7 +21,7 @@ class DB_Manager @Inject constructor(private val db_factory: SecureStorageFactor
     /**
      * saves torrent to database as mentioned above
      */
-    fun add(hash: String, value: ByteArray, dict: TorrentDict, db_name: String = "abc"){
+    fun add(hash: String, value: ByteArray, dict: TorrentDict, db_name: String = "my_torrents"){
         val hashBytes = hash.toByteArray(charset)
         val db = db_factory.open(db_name.toByteArray(charset))
         //db.write(hashBytes, value)
@@ -32,11 +32,11 @@ class DB_Manager @Inject constructor(private val db_factory: SecureStorageFactor
         }
     }
 
-    fun exists(hash: String, key: String = ""): Boolean {
-        return exists((hash).toByteArray(charset),key)
+    fun exists(hash: String, db_name: String = "my_torrents"): Boolean {
+        return exists((hash).toByteArray(charset), db_name)
     }
 
-    fun exists(hash: ByteArray, key: String = "", db_name: String = "abc"): Boolean {
+    fun exists(hash: ByteArray, db_name: String = "my_torrents"): Boolean {
         val db = db_factory.open(db_name.toByteArray(charset))
         return db.read(hash + "exists".toByteArray(charset))?.isNotEmpty() ?: false
     }
@@ -44,12 +44,12 @@ class DB_Manager @Inject constructor(private val db_factory: SecureStorageFactor
     /**
      * gets value from database
      */
-    fun get(hash: String, key: String = ""): ByteArray? {
-        return get((hash).toByteArray(charset),key)
+    fun get(hash: String, key: String = "", db_name: String = "my_torrents"): ByteArray? {
+        return get((hash).toByteArray(charset),key, db_name)
     }
 
-    fun get(hash: ByteArray, key: String = "", db_name: String = "abc"): ByteArray? {
-        if(!exists(hash)) return null
+    fun get(hash: ByteArray, key: String = "", db_name: String = "my_torrents"): ByteArray? {
+        if(!exists(hash, db_name)) return null
         val db = db_factory.open(db_name.toByteArray(charset))
         return db.read(hash+key.toByteArray(charset))
     }
@@ -58,11 +58,11 @@ class DB_Manager @Inject constructor(private val db_factory: SecureStorageFactor
      * delete value from databaase:
      * (writes empty ByteArray to that key)
      */
-    fun delete(key: String): Unit {
-        delete(key.toByteArray(charset))
+    fun delete(key: String, db_name: String = "my_torrents"): Unit {
+        delete(key.toByteArray(charset), db_name)
     }
 
-    fun delete(key: ByteArray, db_name: String = "abc"): Unit {
+    fun delete(key: ByteArray, db_name: String = "my_torrents"): Unit {
         val db = db_factory.open(db_name.toByteArray(charset))
         db.write(key+"exists".toByteArray(charset), ByteArray(0))
     }

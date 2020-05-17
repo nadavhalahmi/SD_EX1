@@ -29,6 +29,21 @@ class Coder {
         }
         return res
     }
+    //"65" -> "A"
+    fun string_to_hex(str: String): String{
+        var res = ByteArray(str.length/2)
+        for(i in str.indices step 2){
+            res[i/2] = (str[i]+""+str[i+1]).toInt(16).toByte()
+        }
+        return res.toString(Charsets.UTF_8)
+    }
+
+    fun get_ip_port(bytes: ByteArray): Pair<String, Int> {
+        assert(bytes.size == 6)
+        val ip = bytes[0].toString()+"."+bytes[1].toString()+"."+bytes[2].toString()+"."+bytes[3].toString()
+        val port = bytes[4].toString()+bytes[5].toString()
+        return Pair(ip, port.toInt())
+    }
 
 
 }
