@@ -223,9 +223,11 @@ class CourseTorrent @Inject constructor(private val dbManager: DB_Manager) {
             try{
                 val peers = parser.parseList(peers_bytes)
             }catch (e: Throwable){ //TODO: FIX code below
-                val peers = (parser.parseString(peers_bytes).value() as String).toByteArray()
-                for(i in peers.indices step 6){
-                    val ip_port = coder.get_ip_port(peers.copyOfRange(i, i+6))
+                val range = (parser.parseString(peers_bytes).range())
+                val start = range.startIndex() + 4 //TODO: FIX
+                val end = range.endIndex()
+                for(i in start until end step 6 ){
+                    val ip_port = coder.get_ip_port(peers_bytes.copyOfRange(i, i+6))
                     res.add(KnownPeer(ip = ip_port.first, port = ip_port.second, peerId = null))
                 }
             }

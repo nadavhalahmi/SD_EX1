@@ -40,8 +40,11 @@ class Coder {
 
     fun get_ip_port(bytes: ByteArray): Pair<String, Int> {
         assert(bytes.size == 6)
-        val ip = bytes[0].toString()+"."+bytes[1].toString()+"."+bytes[2].toString()+"."+bytes[3].toString()
-        val port = bytes[4].toString()+bytes[5].toString()
+        var ip = bytes[0].toUByte().toString()
+        for(i in 1 until 4){
+            ip += "." + bytes[i].toUByte().toString()
+        }
+        val port = bytes[4].toUByte().toString()+bytes[5].toUByte().toString()
         return Pair(ip, port.toInt())
     }
 
