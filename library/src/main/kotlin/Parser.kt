@@ -6,19 +6,6 @@ import kotlin.collections.HashMap
 class TorrentParser {
     private val charset = Charsets.UTF_8
 
-    fun SHAsum(convertme: ByteArray) : String{
-        val md = MessageDigest.getInstance("SHA-1");
-        return byteArray2Hex(md.digest(convertme));
-    }
-
-    fun byteArray2Hex(hash: ByteArray) : String{
-        val formatter = Formatter();
-        for (b in hash) {
-            formatter.format("%02x", b);
-        }
-        return formatter.toString();
-    }
-
     /**
      * [torrent]: the torrent to parse
      * [startIndex]: the start index of the element
@@ -66,7 +53,7 @@ class TorrentParser {
      * TorrentElement("one", [startIndex], [startIndex]+3)
      */
     private fun parseString(torrent: ByteArray, startIndex: Int): TorrentElement {
-        assert(torrent[startIndex].toChar() in '1'..'9')
+        assert(torrent[startIndex].toChar() in '0'..'9')
         var pairLen = 0
         var res: String = parseBytes(torrent, startIndex) {torrent[it].toChar() == ':'}
         //use val elemLen = res.first.toString(charset).toInt() if res.first is ByteArray

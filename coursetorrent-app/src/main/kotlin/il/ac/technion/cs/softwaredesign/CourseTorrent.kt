@@ -1,13 +1,18 @@
 package il.ac.technion.cs.softwaredesign
 
+import Coder
 import DB_Manager
 import TorrentDict
 import TorrentList
 import TorrentParser
 import com.google.inject.Inject
 import il.ac.technion.cs.softwaredesign.exceptions.TrackerException
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
+import java.net.URLEncoder
+import java.util.*
 
 /**
  * This is the class implementing CourseTorrent, a BitTorrent client.
@@ -18,6 +23,7 @@ import java.net.URL
  */
 class CourseTorrent @Inject constructor(private val dbManager: DB_Manager) {
     private val parser = TorrentParser()
+    private val coder = Coder()
     /**
      * Load in the torrent metainfo file from [torrent]. The specification for these files can be found here:
      * [Metainfo File Structure](https://wiki.theory.org/index.php/BitTorrentSpecification#Metainfo_File_Structure).
@@ -41,7 +47,7 @@ class CourseTorrent @Inject constructor(private val dbManager: DB_Manager) {
         }catch (e: Exception){
             throw IllegalArgumentException()
         }
-        val infohash = parser.SHAsum(infoValue)
+        val infohash = coder.SHAsum(infoValue)
         if(dbManager.exists(infohash))
             throw IllegalStateException()
         dbManager.add(infohash, torrent, dict)
@@ -121,22 +127,29 @@ class CourseTorrent @Inject constructor(private val dbManager: DB_Manager) {
             throw java.lang.IllegalArgumentException()
         val announce_list = announces(infohash = infohash)
         if(event == TorrentEvent.STARTED)
-            announce_list.shuffled()
+            announce_list.shuffled() //TODO: CHECK suffeld in db
         var tracker = announce_list[0][0]
         val url = URL(tracker)
+        //val url = URL("https://127.0.0.1:8000/test")
 
-        with(url.openConnection() as HttpURLConnection) {
-            requestMethod = "GET"  // optional default is GET
+        var reqParam = ""
+        reqParam += "info_hash=" + coder.binary_encode(infohash)
+        reqParam += "&" + "event=" + event.toString().toLowerCase()
+        reqParam += "&uploaded=$uploaded"
+        reqParam += "&downloaded=$downloaded"
+        reqParam += "&left=$left"
+        reqParam += "&compact=1"
+        reqParam += "&peer_id=-CS1000-123456123456" //TODO: FIX THIS
 
-            println("\nSent 'GET' request to URL : $url; Response Code : $responseCode")
 
-            inputStream.bufferedReader().use {
-                it.lines().forEach { line ->
-                    println(line)
-                }
-            }
-        }
-        return 3
+
+        val mURL = URL(tracker+"?"+reqParam)
+        val resp = mURL.readBytes()
+        val respDict = parser.parse(resp)
+        if(respDict["interval"] != null)
+            return (respDict["interval"]?.value() as Long).toInt()
+        else
+            throw TrackerException(respDict["failure reason"]?.value() as String)
     }
 
     /**
