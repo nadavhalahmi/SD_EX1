@@ -12,7 +12,7 @@ class TorrentParser {
      * [stopCond]: the condition for stop. depends on current index
      * @return: bytes until stopCond as string
      */
-    private fun parseBytes(torrent: ByteArray, startIndex: Int, stopCond: (Int) -> Boolean): String {
+    fun parseBytes(torrent: ByteArray, startIndex: Int = 0, stopCond: (Int) -> Boolean): String {
         var str = ""
         var index = startIndex
         while(!stopCond(index)) {

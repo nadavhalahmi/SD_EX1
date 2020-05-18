@@ -7,12 +7,7 @@ import TorrentList
 import TorrentParser
 import com.google.inject.Inject
 import il.ac.technion.cs.softwaredesign.exceptions.TrackerException
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
 import java.net.URL
-import java.net.URLEncoder
-import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
@@ -125,32 +120,42 @@ class CourseTorrent @Inject constructor(private val dbManager: DB_Manager) {
      * @return The interval in seconds that the client should wait before announcing again.
      */
     fun announce(infohash: String, event: TorrentEvent, uploaded: Long, downloaded: Long, left: Long): Int{
-        //TODO: FIX in failure try other tracker
         if(!dbManager.exists(infohash))
             throw java.lang.IllegalArgumentException()
-        val announce_list = announces(infohash = infohash)
+        val randLen = 6;
+        val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+        val announceList = announces(infohash = infohash)
+        var respDict : TorrentDict? = null
         if(event == TorrentEvent.STARTED)
-            announce_list.shuffled() //TODO: CHECK suffeld in db
-            //db_manager.add(infohash+"announce-list")
-        var tracker = announce_list[0][0]
+            announceList.shuffled() //TODO: CHECK suffeld in db
+        for(l in announceList){
+            for(tracker in l){
+                var reqParam = ""
+                reqParam += "info_hash=" + coder.binary_encode(infohash)
+                reqParam += "&" + "event=" + event.toString().toLowerCase()
+                reqParam += "&uploaded=$uploaded"
+                reqParam += "&downloaded=$downloaded"
+                reqParam += "&left=$left"
+                reqParam += "&compact=1"
+                val randomString = (1..randLen)
+                        .map { _ -> kotlin.random.Random.nextInt(0, charPool.size) }
+                        .map(charPool::get)
+                        .joinToString("");
+                val ids = coder.SHAsum(("206784258"+"314628090").toByteArray()).slice(0 until 6)
+                reqParam += "&peer_id=-CS1000-$ids$randomString"
 
-        var reqParam = ""
-        reqParam += "info_hash=" + coder.binary_encode(infohash)
-        reqParam += "&" + "event=" + event.toString().toLowerCase()
-        reqParam += "&uploaded=$uploaded"
-        reqParam += "&downloaded=$downloaded"
-        reqParam += "&left=$left"
-        reqParam += "&compact=1"
-        reqParam += "&peer_id=-CS1000-123456123456" //TODO: FIX THIS
-
-        val mURL = URL(tracker+"?"+reqParam)
-        val resp = mURL.readBytes()
-        val respDict = parser.parse(resp)
-        dbManager.add(hash=tracker, value=resp, dict=respDict, db_name = "announce_db")
-        if(respDict["interval"] != null)
-            return (respDict["interval"]?.value() as Long).toInt()
+                val mURL = URL("$tracker?$reqParam")
+                val resp = mURL.readBytes()
+                respDict = parser.parse(resp)
+                dbManager.add(hash=tracker, value=resp, dict=respDict, db_name = "announce_db")
+                if(respDict["interval"] != null)
+                    return (respDict["interval"]?.value() as Long).toInt()
+            }
+        }
+        if(respDict != null)
+            throw TrackerException(respDict["failure reason"]?.value().toString())
         else
-            throw TrackerException(respDict["failure reason"]?.value() as String)
+            throw throw TrackerException("generic announce exception")
     }
 
     /**
@@ -165,23 +170,25 @@ class CourseTorrent @Inject constructor(private val dbManager: DB_Manager) {
      * @throws IllegalArgumentException If [infohash] is not loaded.
      */
     fun scrape(infohash: String): Unit{
-        //TODO: CHANGE to all trackers
         if(!dbManager.exists(infohash))
             throw java.lang.IllegalArgumentException()
-        val announce_list = announces(infohash = infohash)
-        val tracker_old = announce_list[0][0] //TODO: FIX
-        var tracker = announce_list[0][0]
-        //if(tracker.split('/').last().startsWith("announce"))
-        //    tracker = tracker.slice('/')
-        tracker = "http://bttracker.debian.org:6969/scrape"
-        var reqParam = ""
-        reqParam += "info_hash=" + coder.binary_encode(infohash)
-        val mURL = URL(tracker+"?"+reqParam)
-        val resp = mURL.readBytes()
-        val respDict = parser.parse(resp)
-        val files: TorrentDict = respDict["files"]?.value() as TorrentDict
-        val data: TorrentDict = files[coder.string_to_hex(infohash)]?.value() as TorrentDict
-        dbManager.add(hash=tracker_old, value=resp, dict=respDict, db_name = "scrapes")
+        val announceList: List<List<String>> = announces(infohash = infohash)
+        for(l in announceList){
+            for(tracker in l){
+                if(tracker.split('/').last().startsWith("announce")) {
+                    val lastIndex = tracker.lastIndexOf(char = '/')
+                    val scrape = tracker.slice(0..lastIndex) + "scrape" + tracker.slice((lastIndex + "/announce".length) until tracker.length)
+                    var reqParam = ""
+                    reqParam += "info_hash=" + coder.binary_encode(infohash)
+                    val mURL = URL(scrape + "?" + reqParam)
+                    val resp = mURL.readBytes()
+                    val respDict = parser.parse(resp)
+                    dbManager.add(hash = tracker, value = resp, dict = respDict, db_name = "scrapes")
+//                    val files: TorrentDict = respDict["files"]?.value() as TorrentDict
+//                    val data: TorrentDict = files[coder.string_to_hex(infohash)]?.value() as TorrentDict
+                }
+            }
+        }
     }
 
     /**
@@ -216,19 +223,21 @@ class CourseTorrent @Inject constructor(private val dbManager: DB_Manager) {
         if(!dbManager.exists(infohash))
             throw java.lang.IllegalArgumentException()
         val res = ArrayList<KnownPeer>()
-        val announce_list = announces(infohash)
-        val tracker = announce_list[0][0]
-        val peers_bytes = dbManager.get(tracker,key="peers", db_name = "announce_db")
-        if(peers_bytes != null){
-            try{
-                val peers = parser.parseList(peers_bytes)
-            }catch (e: Throwable){ //TODO: FIX code below
-                val range = (parser.parseString(peers_bytes).range())
-                val start = range.startIndex() + 4 //TODO: FIX
-                val end = range.endIndex()
-                for(i in start until end step 6 ){
-                    val ip_port = coder.get_ip_port(peers_bytes.copyOfRange(i, i+6))
-                    res.add(KnownPeer(ip = ip_port.first, port = ip_port.second, peerId = null))
+        val announceList = announces(infohash)
+        for(l in announceList){
+            for(tracker in l){
+                val peersBytes = dbManager.get(tracker,key="peers", db_name = "announce_db")
+                if(peersBytes != null){
+                    try{
+                        val peers = parser.parseList(peersBytes) //TODO: FIX
+                    }catch (e: Throwable){
+                        val start = (parser.parseBytes(peersBytes) {peersBytes[it].toChar() == ':'}).length + 1
+                        val end = peersBytes.size
+                        for(i in start until end step 6 ){
+                            val (ip, port) = coder.get_ip_port(peersBytes.copyOfRange(i, i+6))
+                            res.add(KnownPeer(ip = ip, port = port, peerId = null))
+                        }
+                    }
                 }
             }
         }
@@ -257,15 +266,18 @@ class CourseTorrent @Inject constructor(private val dbManager: DB_Manager) {
         if(!dbManager.exists(infohash))
             throw java.lang.IllegalArgumentException()
         val res = HashMap<String, ScrapeData>()
-        val announce_list = announces(infohash)
-        val tracker = announce_list[0][0]
-        val files_bytes = dbManager.get(tracker,key="files", db_name = "scrapes")
-        if(files_bytes != null){
-            val files = parser.parse(files_bytes)
-            val data: TorrentDict = files.get(coder.string_to_hex(infohash))?.value() as TorrentDict
-            val scrape = Scrape(complete = (data["complete"]?.value() as Long).toInt(), downloaded = (data["downloaded"]?.value() as Long).toInt(),
-                incomplete = (data["incomplete"]?.value() as Long).toInt(), name = data["name"]?.value()?.toString())
-            res[tracker] = scrape
+        val announceList = announces(infohash)
+        for(l in announceList){
+            for(tracker in l){
+                val filesBytes = dbManager.get(tracker,key="files", db_name = "scrapes")
+                if(filesBytes != null){
+                    val files = parser.parse(filesBytes)
+                    val data: TorrentDict = files[coder.string_to_hex(infohash)]?.value() as TorrentDict
+                    val scrape = Scrape(complete = (data["complete"]?.value() as Long).toInt(), downloaded = (data["downloaded"]?.value() as Long).toInt(),
+                            incomplete = (data["incomplete"]?.value() as Long).toInt(), name = data["name"]?.value()?.toString())
+                    res[tracker] = scrape
+                }
+            }
         }
         return res
     }
