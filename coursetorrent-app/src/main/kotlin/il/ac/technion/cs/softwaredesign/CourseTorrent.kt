@@ -122,7 +122,7 @@ class CourseTorrent @Inject constructor(private val dbManager: DB_Manager) {
     fun announce(infohash: String, event: TorrentEvent, uploaded: Long, downloaded: Long, left: Long): Int{
         if(!dbManager.exists(infohash))
             throw java.lang.IllegalArgumentException()
-        val randLen = 6;
+        val randLen = 6
         val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
         val announceList = announces(infohash = infohash)
         var respDict : TorrentDict? = null
@@ -138,9 +138,9 @@ class CourseTorrent @Inject constructor(private val dbManager: DB_Manager) {
                 reqParam += "&left=$left"
                 reqParam += "&compact=1"
                 val randomString = (1..randLen)
-                        .map { _ -> kotlin.random.Random.nextInt(0, charPool.size) }
+                        .map { kotlin.random.Random.nextInt(0, charPool.size) }
                         .map(charPool::get)
-                        .joinToString("");
+                        .joinToString("")
                 val ids = coder.SHAsum(("206784258"+"314628090").toByteArray()).slice(0 until 6)
                 reqParam += "&peer_id=-CS1000-$ids$randomString"
 
@@ -180,7 +180,7 @@ class CourseTorrent @Inject constructor(private val dbManager: DB_Manager) {
                     val scrape = tracker.slice(0..lastIndex) + "scrape" + tracker.slice((lastIndex + "/announce".length) until tracker.length)
                     var reqParam = ""
                     reqParam += "info_hash=" + coder.binary_encode(infohash)
-                    val mURL = URL(scrape + "?" + reqParam)
+                    val mURL = URL("$scrape?$reqParam")
                     val resp = mURL.readBytes()
                     val respDict = parser.parse(resp)
                     dbManager.add(hash = tracker, value = resp, dict = respDict, db_name = "scrapes")
