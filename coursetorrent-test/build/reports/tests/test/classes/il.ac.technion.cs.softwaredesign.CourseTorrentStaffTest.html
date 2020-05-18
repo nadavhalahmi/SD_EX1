@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">3.633s</div>
+<div class="counter">4.429s</div>
 <p>duration</p>
 </div>
 </td>
@@ -93,9 +93,11 @@
 	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:163)
 	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1595)
 	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1523)
-	at java.base/java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:527)
-	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getResponseCode(HttpsURLConnectionImpl.java:308)
-	at il.ac.technion.cs.softwaredesign.CourseTorrent.announce(CourseTorrent.kt:131)
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:224)
+	at java.base/java.net.URL.openStream(URL.java:1167)
+	at kotlin.io.TextStreamsKt.readBytes(ReadWrite.kt:150)
+	at TorrentHTTP.get(TorrentHTTP.kt:12)
+	at il.ac.technion.cs.softwaredesign.CourseTorrent.announce(CourseTorrent.kt:148)
 	at il.ac.technion.cs.softwaredesign.CourseTorrentStaffTest.after announce, client has up-to-date peer list(CourseTorrentStaffTest.kt:64)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -212,9 +214,11 @@
 	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:163)
 	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1595)
 	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1523)
-	at java.base/java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:527)
-	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getResponseCode(HttpsURLConnectionImpl.java:308)
-	at il.ac.technion.cs.softwaredesign.CourseTorrent.announce(CourseTorrent.kt:131)
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:224)
+	at java.base/java.net.URL.openStream(URL.java:1167)
+	at kotlin.io.TextStreamsKt.readBytes(ReadWrite.kt:150)
+	at TorrentHTTP.get(TorrentHTTP.kt:12)
+	at il.ac.technion.cs.softwaredesign.CourseTorrent.announce(CourseTorrent.kt:148)
 	at il.ac.technion.cs.softwaredesign.CourseTorrentStaffTest.client announces to tracker(CourseTorrentStaffTest.kt:39)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -311,7 +315,7 @@
 <a name="client scrapes tracker and updates statistics()"></a>
 <h3 class="failures">client scrapes tracker and updates statistics()</h3>
 <span class="code">
-<pre>org.opentest4j.AssertionFailedError: Unexpected exception thrown: kotlin.NotImplementedError: An operation is not implemented: Implement me!
+<pre>org.opentest4j.AssertionFailedError: Unexpected exception thrown: java.net.ConnectException: Connection refused: connect
 	at org.junit.jupiter.api.AssertDoesNotThrow.createAssertionFailedError(AssertDoesNotThrow.java:83)
 	at org.junit.jupiter.api.AssertDoesNotThrow.assertDoesNotThrow(AssertDoesNotThrow.java:76)
 	at org.junit.jupiter.api.AssertDoesNotThrow.assertDoesNotThrow(AssertDoesNotThrow.java:59)
@@ -406,8 +410,31 @@
 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:630)
 	at org.gradle.internal.concurrent.ThreadFactoryImpl$ManagedThreadRunnable.run(ThreadFactoryImpl.java:56)
 	at java.base/java.lang.Thread.run(Thread.java:832)
-Caused by: kotlin.NotImplementedError: An operation is not implemented: Implement me!
-	at il.ac.technion.cs.softwaredesign.CourseTorrent.scrape(CourseTorrent.kt:153)
+Caused by: java.net.ConnectException: Connection refused: connect
+	at java.base/sun.nio.ch.Net.connect0(Native Method)
+	at java.base/sun.nio.ch.Net.connect(Net.java:503)
+	at java.base/sun.nio.ch.Net.connect(Net.java:492)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:588)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:333)
+	at java.base/java.net.Socket.connect(Socket.java:648)
+	at java.base/sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:290)
+	at java.base/sun.security.ssl.BaseSSLSocketImpl.connect(BaseSSLSocketImpl.java:173)
+	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:182)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:474)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:569)
+	at java.base/sun.net.www.protocol.https.HttpsClient.&lt;init&gt;(HttpsClient.java:265)
+	at java.base/sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:372)
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:177)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1194)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1082)
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:163)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1595)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1523)
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:224)
+	at java.base/java.net.URL.openStream(URL.java:1167)
+	at kotlin.io.TextStreamsKt.readBytes(ReadWrite.kt:150)
+	at TorrentHTTP.get(TorrentHTTP.kt:12)
+	at il.ac.technion.cs.softwaredesign.CourseTorrent.scrape(CourseTorrent.kt:183)
 	at il.ac.technion.cs.softwaredesign.CourseTorrentStaffTest$client scrapes tracker and updates statistics$1.invoke(CourseTorrentStaffTest.kt:50)
 	at il.ac.technion.cs.softwaredesign.CourseTorrentStaffTest$client scrapes tracker and updates statistics$1.invoke(CourseTorrentStaffTest.kt:10)
 	at org.junit.jupiter.api.AssertionsKt$sam$org_junit_jupiter_api_function_ThrowingSupplier$0.get(Assertions.kt)
@@ -440,9 +467,11 @@ Caused by: kotlin.NotImplementedError: An operation is not implemented: Implemen
 	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:163)
 	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1595)
 	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1523)
-	at java.base/java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:527)
-	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getResponseCode(HttpsURLConnectionImpl.java:308)
-	at il.ac.technion.cs.softwaredesign.CourseTorrent.announce(CourseTorrent.kt:131)
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:224)
+	at java.base/java.net.URL.openStream(URL.java:1167)
+	at kotlin.io.TextStreamsKt.readBytes(ReadWrite.kt:150)
+	at TorrentHTTP.get(TorrentHTTP.kt:12)
+	at il.ac.technion.cs.softwaredesign.CourseTorrent.announce(CourseTorrent.kt:148)
 	at il.ac.technion.cs.softwaredesign.CourseTorrentStaffTest.peers are invalidated correctly(CourseTorrentStaffTest.kt:86)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -548,32 +577,32 @@ Caused by: kotlin.NotImplementedError: An operation is not implemented: Implemen
 </thead>
 <tr>
 <td class="failures">after announce, client has up-to-date peer list()</td>
-<td class="failures">1.005s</td>
+<td class="failures">1.007s</td>
 <td class="failures">failed</td>
 </tr>
 <tr>
 <td class="success">after load, announce is correct()</td>
-<td class="success">0.066s</td>
+<td class="success">0.036s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">after load, infohash calculated correctly()</td>
-<td class="success">0.016s</td>
+<td class="success">0.021s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="failures">client announces to tracker()</td>
-<td class="failures">1.530s</td>
+<td class="failures">1.337s</td>
 <td class="failures">failed</td>
 </tr>
 <tr>
 <td class="failures">client scrapes tracker and updates statistics()</td>
-<td class="failures">0.011s</td>
+<td class="failures">1.012s</td>
 <td class="failures">failed</td>
 </tr>
 <tr>
 <td class="failures">peers are invalidated correctly()</td>
-<td class="failures">1.005s</td>
+<td class="failures">1.016s</td>
 <td class="failures">failed</td>
 </tr>
 </table>
@@ -586,7 +615,7 @@ Caused by: kotlin.NotImplementedError: An operation is not implemented: Implemen
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 6.3</a> at 16 במאי 2020, 19:59:01</p>
+<a href="http://www.gradle.org">Gradle 6.3</a> at 18 במאי 2020, 15:31:07</p>
 </div>
 </div>
 </body>

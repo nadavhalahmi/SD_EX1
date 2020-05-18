@@ -3,8 +3,11 @@ import il.ac.technion.cs.softwaredesign.storage.SecureStorage
 import il.ac.technion.cs.softwaredesign.storage.SecureStorageFactory
 
 import DB_Manager
+import ITorrentHTTP
 import MyStorage
 import MyStorageFactory
+import TorrentHTTP
+import TorrentHTTPDummyImpl
 import com.google.inject.Guice
 import dev.misfitlabs.kotlinguice4.KotlinModule
 import dev.misfitlabs.kotlinguice4.getInstance
@@ -17,6 +20,7 @@ class CourseTorrentModule : KotlinModule() {
         //install(SecureStorageModule())
         bind<SecureStorageFactory>().to<MyStorageFactory>()
         bind<SecureStorage>().to<MyStorage>()
+        bind<ITorrentHTTP>().to<TorrentHTTPDummyImpl>() //TODO: DONT forget to use real implementation
     }
 }
 

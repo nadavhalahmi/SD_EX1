@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" tests="6" skipped="0" failures="3" errors="0" timestamp="2020-05-18T12:28:00" hostname="TP13-01" time="4.017">
+<testsuite name="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" tests="6" skipped="0" failures="3" errors="0" timestamp="2020-05-18T12:48:16" hostname="TP13-01" time="3.667">
   <properties/>
-  <testcase name="client announces to tracker()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" time="0.857"/>
-  <testcase name="after load, infohash calculated correctly()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" time="0.007"/>
-  <testcase name="peers are invalidated correctly()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" time="1.435">
+  <testcase name="client announces to tracker()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" time="0.772"/>
+  <testcase name="after load, infohash calculated correctly()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" time="0.004"/>
+  <testcase name="peers are invalidated correctly()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" time="1.213">
     <failure message="java.net.ConnectException: Connection refused: connect" type="java.net.ConnectException">java.net.ConnectException: Connection refused: connect
 	at java.base/sun.nio.ch.Net.connect0(Native Method)
 	at java.base/sun.nio.ch.Net.connect(Net.java:503)
@@ -28,7 +28,7 @@
 	at java.base/java.net.URL.openStream(URL.java:1167)
 	at kotlin.io.TextStreamsKt.readBytes(ReadWrite.kt:150)
 	at TorrentHTTP.get(TorrentHTTP.kt:12)
-	at il.ac.technion.cs.softwaredesign.CourseTorrent.announce(CourseTorrent.kt:148)
+	at il.ac.technion.cs.softwaredesign.CourseTorrent.announce(CourseTorrent.kt:149)
 	at il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1.peers are invalidated correctly(CourseTorrentTestHW1.kt:103)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -120,7 +120,7 @@
 	at java.base/java.lang.Thread.run(Thread.java:832)
 </failure>
   </testcase>
-  <testcase name="client scrapes tracker and updates statistics()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" time="0.626">
+  <testcase name="client scrapes tracker and updates statistics()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" time="0.612">
     <failure message="java.lang.AssertionError: expected: a value that is equal to {&quot;http://bttracker.debian.org:6969/announce&quot;:Scrape(complete=783, downloaded=18230, incomplete=3, name=null)}&#10;but was: {}" type="java.lang.AssertionError">java.lang.AssertionError: expected: a value that is equal to {&quot;http://bttracker.debian.org:6969/announce&quot;:Scrape(complete=783, downloaded=18230, incomplete=3, name=null)}
 but was: {}
 	at com.natpryce.hamkrest.assertion.AssertKt.assertThat(assert.kt:19)
@@ -216,8 +216,8 @@ but was: {}
 	at java.base/java.lang.Thread.run(Thread.java:832)
 </failure>
   </testcase>
-  <testcase name="after load, announce is correct()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" time="0.021"/>
-  <testcase name="after announce, client has up-to-date peer list()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" time="1.027">
+  <testcase name="after load, announce is correct()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" time="0.02"/>
+  <testcase name="after announce, client has up-to-date peer list()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentTestHW1" time="0.986">
     <failure message="java.lang.AssertionError: expected: a value that in which any element has ip that is equal to &quot;127.0.0.22&quot; and has port that is equal to 6887&#10;but was []" type="java.lang.AssertionError">java.lang.AssertionError: expected: a value that in which any element has ip that is equal to &quot;127.0.0.22&quot; and has port that is equal to 6887
 but was []
 	at com.natpryce.hamkrest.assertion.AssertKt.assertThat(assert.kt:19)

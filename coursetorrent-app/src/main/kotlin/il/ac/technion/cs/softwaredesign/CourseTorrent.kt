@@ -2,6 +2,7 @@ package il.ac.technion.cs.softwaredesign
 
 import Coder
 import DB_Manager
+import ITorrentHTTP
 import TorrentDict
 import TorrentHTTP
 import TorrentList
@@ -19,10 +20,10 @@ import kotlin.collections.HashMap
  * + Parsing torrent metainfo files (".torrent" files)
  * + Communication with trackers (announce, scrape).
  */
-class CourseTorrent @Inject constructor(private val dbManager: DB_Manager) {
+class CourseTorrent @Inject constructor(private val dbManager: DB_Manager, private val torrentHTTP: ITorrentHTTP) {
     private val parser = TorrentParser()
     private val coder = Coder()
-    private val torrentHTTP = TorrentHTTP()
+    //private val torrentHTTP = ITorrentHTTP()
     /**
      * Load in the torrent metainfo file from [torrent]. The specification for these files can be found here:
      * [Metainfo File Structure](https://wiki.theory.org/index.php/BitTorrentSpecification#Metainfo_File_Structure).
