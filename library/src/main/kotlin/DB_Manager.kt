@@ -26,8 +26,10 @@ class DB_Manager @Inject constructor(private val db_factory: SecureStorageFactor
         //db.write(hashBytes, value)
         db.write(hashBytes+"exists".toByteArray(charset), "true".toByteArray(charset))
         for(key in dict.keys) {
-            val range = dict.getRange(key)
-            db.write((hash + key).toByteArray(), value.copyOfRange(range.startIndex(), range.endIndex()))
+            if(key == "announce" || key == "announce-list") {
+                val range = dict.getRange(key)
+                db.write((hash + key).toByteArray(), value.copyOfRange(range.startIndex(), range.endIndex()))
+            }
         }
     }
 
@@ -123,5 +125,9 @@ class DB_Manager @Inject constructor(private val db_factory: SecureStorageFactor
 
     fun getFiles(tracker: String): ByteArray? {
         return getScrape(tracker, "files")
+    }
+
+    fun updateAnnounce(announceList: List<List<String>>) {
+        //TODO: IMPLEMET
     }
 }

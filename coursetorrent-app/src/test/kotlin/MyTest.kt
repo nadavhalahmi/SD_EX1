@@ -1,9 +1,13 @@
 package il.ac.technion.cs.softwaredesign
 
+import ITorrentHTTP
+import TorrentHTTP
 import com.google.inject.Guice
 import com.natpryce.hamkrest.*
 import com.natpryce.hamkrest.assertion.assertThat
 import dev.misfitlabs.kotlinguice4.getInstance
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -45,14 +49,17 @@ class MyTest {
 
     @Test
     fun `client announces to tracker`() {
-        //val infohash = torrent.load(lame)
-        val infohash = torrent.load(debian)
+        val torrentHTTPMock = injector.getInstance<ITorrentHTTP>()
 
+        val infohash = torrent.load(lame)
+
+        every {torrentHTTPMock.get(any(), any())} returns """d8:intervali360ee""".toByteArray(Charsets.UTF_8)
+        //TODO: create full response using code from facebook and update it above
         /* interval is 360 */
         val interval = torrent.announce(infohash, TorrentEvent.STARTED, 0, 0, 0)
 
         //assertThat(interval, equalTo(360))
-        assertThat(interval, equalTo(900))
+        assertThat(interval, equalTo(360))
         /* Assertion to verify that the tracker was actually called */
     }
 

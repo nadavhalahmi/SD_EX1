@@ -23,7 +23,6 @@ import kotlin.collections.HashMap
 class CourseTorrent @Inject constructor(private val dbManager: DB_Manager, private val torrentHTTP: ITorrentHTTP) {
     private val parser = TorrentParser()
     private val coder = Coder()
-    //private val torrentHTTP = ITorrentHTTP()
     /**
      * Load in the torrent metainfo file from [torrent]. The specification for these files can be found here:
      * [Metainfo File Structure](https://wiki.theory.org/index.php/BitTorrentSpecification#Metainfo_File_Structure).
@@ -129,8 +128,10 @@ class CourseTorrent @Inject constructor(private val dbManager: DB_Manager, priva
         val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
         val announceList = announces(infohash = infohash)
         var respDict : TorrentDict? = null
-        if(event == TorrentEvent.STARTED)
-            announceList.shuffled() //TODO: CHECK suffeld in db
+        if(event == TorrentEvent.STARTED) {
+            announceList.shuffled()
+            //dbManager.updateAnnounce(announceList)
+        }
         for(l in announceList){
             for(tracker in l){
                 val params = HashMap<String, String>()

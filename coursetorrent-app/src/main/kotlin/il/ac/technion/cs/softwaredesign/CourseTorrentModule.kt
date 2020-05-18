@@ -13,6 +13,7 @@ import dev.misfitlabs.kotlinguice4.KotlinModule
 import dev.misfitlabs.kotlinguice4.getInstance
 import il.ac.technion.cs.softwaredesign.storage.SecureStorageModule
 import il.ac.technion.cs.softwaredesign.storage.impl.SecureStorageFactoryImpl
+import io.mockk.mockk
 import java.nio.charset.Charset
 
 class CourseTorrentModule : KotlinModule() {
@@ -20,7 +21,8 @@ class CourseTorrentModule : KotlinModule() {
         //install(SecureStorageModule())
         bind<SecureStorageFactory>().to<MyStorageFactory>()
         bind<SecureStorage>().to<MyStorage>()
-        bind<ITorrentHTTP>().to<TorrentHTTPDummyImpl>() //TODO: DONT forget to use real implementation
+        //bind<ITorrentHTTP>().to<TorrentHTTPDummyImpl>()
+        bind<ITorrentHTTP>().toInstance(mockk<TorrentHTTP>()) //TODO: DONT forget to use real implementation
     }
 }
 
