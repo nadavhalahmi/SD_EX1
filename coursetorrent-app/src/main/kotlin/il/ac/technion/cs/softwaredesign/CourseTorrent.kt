@@ -3,6 +3,7 @@ package il.ac.technion.cs.softwaredesign
 import Coder
 import DB_Manager
 import TorrentDict
+import TorrentHTTP
 import TorrentList
 import TorrentParser
 import com.google.inject.Inject
@@ -21,6 +22,7 @@ import kotlin.collections.HashMap
 class CourseTorrent @Inject constructor(private val dbManager: DB_Manager) {
     private val parser = TorrentParser()
     private val coder = Coder()
+    private val torrentHTTP = TorrentHTTP()
     /**
      * Load in the torrent metainfo file from [torrent]. The specification for these files can be found here:
      * [Metainfo File Structure](https://wiki.theory.org/index.php/BitTorrentSpecification#Metainfo_File_Structure).
@@ -45,9 +47,9 @@ class CourseTorrent @Inject constructor(private val dbManager: DB_Manager) {
             throw IllegalArgumentException()
         }
         val infohash = coder.SHAsum(infoValue)
-        if(dbManager.exists(infohash))
+        if(dbManager.torrentExists(infohash))
             throw IllegalStateException()
-        dbManager.add(infohash, torrent, dict)
+        dbManager.addTorrent(infohash, torrent, dict)
         return infohash
     }
 
@@ -59,9 +61,9 @@ class CourseTorrent @Inject constructor(private val dbManager: DB_Manager) {
      * @throws IllegalArgumentException If [infohash] is not loaded.
      */
     fun unload(infohash: String): Unit {
-        if(!dbManager.exists(infohash))
+        if(!dbManager.torrentExists(infohash))
             throw IllegalArgumentException()
-        dbManager.delete(infohash)
+        dbManager.deleteTorrent(infohash)
     }
 
     /**
@@ -78,9 +80,9 @@ class CourseTorrent @Inject constructor(private val dbManager: DB_Manager) {
      * @return Tier lists of announce URLs.
      */
     fun announces(infohash: String): List<List<String>> {
-        var lst: ByteArray? = dbManager.get(infohash, "announce-list")
+        var lst: ByteArray? = dbManager.getTorrent(infohash, "announce-list")
         if(lst === null) {
-            lst = dbManager.get(infohash, "announce")
+            lst = dbManager.getTorrent(infohash, "announce")
             if (lst === null)
                 throw IllegalArgumentException()
             else
@@ -120,7 +122,7 @@ class CourseTorrent @Inject constructor(private val dbManager: DB_Manager) {
      * @return The interval in seconds that the client should wait before announcing again.
      */
     fun announce(infohash: String, event: TorrentEvent, uploaded: Long, downloaded: Long, left: Long): Int{
-        if(!dbManager.exists(infohash))
+        if(!dbManager.torrentExists(infohash))
             throw java.lang.IllegalArgumentException()
         val randLen = 6
         val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
@@ -130,24 +132,22 @@ class CourseTorrent @Inject constructor(private val dbManager: DB_Manager) {
             announceList.shuffled() //TODO: CHECK suffeld in db
         for(l in announceList){
             for(tracker in l){
-                var reqParam = ""
-                reqParam += "info_hash=" + coder.binary_encode(infohash)
-                reqParam += "&" + "event=" + event.toString().toLowerCase()
-                reqParam += "&uploaded=$uploaded"
-                reqParam += "&downloaded=$downloaded"
-                reqParam += "&left=$left"
-                reqParam += "&compact=1"
+                val params = HashMap<String, String>()
+                params["info_hash"] = coder.binary_encode(infohash)
+                params["event"] = event.toString().toLowerCase()
+                params["uploaded"] = uploaded.toString()
+                params["downloaded"] = downloaded.toString()
+                params["left"] = left.toString()
+                params["compact"] = "1"
                 val randomString = (1..randLen)
                         .map { kotlin.random.Random.nextInt(0, charPool.size) }
                         .map(charPool::get)
                         .joinToString("")
                 val ids = coder.SHAsum(("206784258"+"314628090").toByteArray()).slice(0 until 6)
-                reqParam += "&peer_id=-CS1000-$ids$randomString"
-
-                val mURL = URL("$tracker?$reqParam")
-                val resp = mURL.readBytes()
+                params["peer_id"] = "-CS1000-$ids$randomString"
+                var resp = torrentHTTP.get(tracker, params)
                 respDict = parser.parse(resp)
-                dbManager.add(hash=tracker, value=resp, dict=respDict, db_name = "announce_db")
+                dbManager.addAnnounce(tracker=tracker, value=resp, dict=respDict)
                 if(respDict["interval"] != null)
                     return (respDict["interval"]?.value() as Long).toInt()
             }
@@ -170,7 +170,7 @@ class CourseTorrent @Inject constructor(private val dbManager: DB_Manager) {
      * @throws IllegalArgumentException If [infohash] is not loaded.
      */
     fun scrape(infohash: String): Unit{
-        if(!dbManager.exists(infohash))
+        if(!dbManager.torrentExists(infohash))
             throw java.lang.IllegalArgumentException()
         val announceList: List<List<String>> = announces(infohash = infohash)
         for(l in announceList){
@@ -178,12 +178,11 @@ class CourseTorrent @Inject constructor(private val dbManager: DB_Manager) {
                 if(tracker.split('/').last().startsWith("announce")) {
                     val lastIndex = tracker.lastIndexOf(char = '/')
                     val scrape = tracker.slice(0..lastIndex) + "scrape" + tracker.slice((lastIndex + "/announce".length) until tracker.length)
-                    var reqParam = ""
-                    reqParam += "info_hash=" + coder.binary_encode(infohash)
-                    val mURL = URL("$scrape?$reqParam")
-                    val resp = mURL.readBytes()
+                    val params = HashMap<String, String>()
+                    params["info_hash"] = coder.binary_encode(infohash)
+                    var resp = torrentHTTP.get(scrape, params)
                     val respDict = parser.parse(resp)
-                    dbManager.add(hash = tracker, value = resp, dict = respDict, db_name = "scrapes")
+                    dbManager.addScrape(hash = tracker, value = resp, dict = respDict)
 //                    val files: TorrentDict = respDict["files"]?.value() as TorrentDict
 //                    val data: TorrentDict = files[coder.string_to_hex(infohash)]?.value() as TorrentDict
                 }
@@ -201,9 +200,9 @@ class CourseTorrent @Inject constructor(private val dbManager: DB_Manager) {
      * @throws IllegalArgumentException If [infohash] is not lodbaded.
      */
     fun invalidatePeer(infohash: String, peer: KnownPeer): Unit{
-        if(!dbManager.exists(infohash))
+        if(!dbManager.torrentExists(infohash))
             throw java.lang.IllegalArgumentException()
-        dbManager.delete(infohash+peer::peerId, db_name = "announce_db")
+        dbManager.deleteAnnounce(infohash+peer::peerId)
     }
 
     /**
@@ -220,13 +219,13 @@ class CourseTorrent @Inject constructor(private val dbManager: DB_Manager) {
      * @return Sorted list of known peers.
      */
     fun knownPeers(infohash: String): List<KnownPeer>{
-        if(!dbManager.exists(infohash))
+        if(!dbManager.torrentExists(infohash))
             throw java.lang.IllegalArgumentException()
         val res = ArrayList<KnownPeer>()
         val announceList = announces(infohash)
         for(l in announceList){
             for(tracker in l){
-                val peersBytes = dbManager.get(tracker,key="peers", db_name = "announce_db")
+                val peersBytes = dbManager.getPeers(tracker)
                 if(peersBytes != null){
                     try{
                         val peers = parser.parseList(peersBytes) //TODO: FIX
@@ -263,13 +262,13 @@ class CourseTorrent @Inject constructor(private val dbManager: DB_Manager) {
      * @return A mapping from tracker announce URL to statistics.
      */
     fun trackerStats(infohash: String): Map<String, ScrapeData> {
-        if(!dbManager.exists(infohash))
+        if(!dbManager.torrentExists(infohash))
             throw java.lang.IllegalArgumentException()
         val res = HashMap<String, ScrapeData>()
         val announceList = announces(infohash)
         for(l in announceList){
             for(tracker in l){
-                val filesBytes = dbManager.get(tracker,key="files", db_name = "scrapes")
+                val filesBytes = dbManager.getFiles(tracker)
                 if(filesBytes != null){
                     val files = parser.parse(filesBytes)
                     val data: TorrentDict = files[coder.string_to_hex(infohash)]?.value() as TorrentDict
