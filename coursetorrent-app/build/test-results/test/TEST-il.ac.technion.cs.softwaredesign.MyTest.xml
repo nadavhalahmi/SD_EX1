@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="il.ac.technion.cs.softwaredesign.MyTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2020-05-19T17:39:27" hostname="TP13-01" time="1.336">
+<testsuite name="il.ac.technion.cs.softwaredesign.MyTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2020-05-19T18:34:54" hostname="TP13-01" time="1.195">
   <properties/>
-  <testcase name="client announces to tracker()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="1.146"/>
+  <testcase name="client announces to tracker()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="1.076"/>
   <testcase name="after load, infohash calculated correctly()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.01"/>
-  <testcase name="peers are invalidated correctly()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.058"/>
-  <testcase name="client scrapes tracker and updates statistics()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.019"/>
-  <testcase name="after load, announce is correct()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.018"/>
-  <testcase name="after announce, client has up-to-date peer list()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.024"/>
+  <testcase name="peers are invalidated correctly()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.031"/>
+  <testcase name="client scrapes tracker and updates statistics()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.012"/>
+  <testcase name="after load, announce is correct()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.011"/>
+  <testcase name="after announce, client has up-to-date peer list()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.02"/>
   <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[מאי 19, 2020 8:39:26 אחה״צ io.mockk.impl.log.JULLogger warn
+  <system-err><![CDATA[מאי 19, 2020 9:34:54 אחה״צ io.mockk.impl.log.JULLogger warn
 WARNING: Failed to transform class java/lang/Object
 java.lang.IllegalArgumentException: Unsupported class file major version 58
 	at net.bytebuddy.jar.asm.ClassReader.<init>(ClassReader.java:184)
@@ -36,7 +36,7 @@ java.lang.IllegalArgumentException: Unsupported class file major version 58
 	at io.mockk.impl.instantiation.JvmMockFactory.newProxy(JvmMockFactory.kt:34)
 	at io.mockk.impl.instantiation.AbstractMockFactory.newProxy$default(AbstractMockFactory.kt:29)
 	at io.mockk.impl.instantiation.AbstractMockFactory.mockk(AbstractMockFactory.kt:59)
-	at il.ac.technion.cs.softwaredesign.TestModule.configure(TestModule.kt:61)
+	at il.ac.technion.cs.softwaredesign.TestModule.configure(TestModule.kt:54)
 	at com.google.inject.AbstractModule.configure(AbstractModule.java:61)
 	at com.google.inject.spi.Elements$RecordingBinder.install(Elements.java:347)
 	at com.google.inject.spi.Elements.getElements(Elements.java:104)
@@ -45,7 +45,7 @@ java.lang.IllegalArgumentException: Unsupported class file major version 58
 	at com.google.inject.Guice.createInjector(Guice.java:87)
 	at com.google.inject.Guice.createInjector(Guice.java:69)
 	at com.google.inject.Guice.createInjector(Guice.java:59)
-	at il.ac.technion.cs.softwaredesign.MyTest.<init>(MyTest.kt:18)
+	at il.ac.technion.cs.softwaredesign.MyTest.<init>(MyTest.kt:15)
 	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
 	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)

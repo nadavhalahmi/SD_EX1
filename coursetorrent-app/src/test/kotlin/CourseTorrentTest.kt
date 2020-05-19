@@ -1,6 +1,5 @@
 package il.ac.technion.cs.softwaredesign
 
-import DB_Manager
 import MyByteArray
 import com.google.inject.Guice
 import com.natpryce.hamkrest.allElements
@@ -9,7 +8,6 @@ import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.hasElement
 import com.natpryce.hamkrest.hasSize
 import dev.misfitlabs.kotlinguice4.getInstance
-import il.ac.technion.cs.softwaredesign.storage.SecureStorageModule
 
 //import io.mockk.every
 //

@@ -1,8 +1,5 @@
 package il.ac.technion.cs.softwaredesign
 
-import KnownPeer
-import Scrape
-import ScrapeData
 import com.google.inject.Guice
 import com.natpryce.hamkrest.*
 import com.natpryce.hamkrest.assertion.assertThat
@@ -68,7 +65,7 @@ class CourseTorrentTestHW1 {
         assertThat(
             torrent.trackerStats(infohash),
             equalTo(mapOf(Pair("http://bttracker.debian.org:6969/announce", Scrape(783, 18230, 3, null) as ScrapeData)))
-            //equalTo(mapOf(Pair("https://127.0.0.1:8082/announce", Scrape(0, 0, 0, null) as ScrapeData)))
+            //equalTo(mapOf(Pair("https://127.0.0.1:8082/announce", Scrape(0, 0, 0, null) as il.ac.technion.cs.softwaredesign.ScrapeData)))
         )
         /* Assertion to verify that the tracker was actually called */
     }
