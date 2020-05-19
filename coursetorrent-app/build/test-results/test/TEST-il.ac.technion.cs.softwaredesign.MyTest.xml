@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="il.ac.technion.cs.softwaredesign.MyTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2020-05-19T17:28:53" hostname="TP13-01" time="1.779">
+<testsuite name="il.ac.technion.cs.softwaredesign.MyTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2020-05-19T17:39:27" hostname="TP13-01" time="1.336">
   <properties/>
-  <testcase name="client announces to tracker()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="1.445"/>
-  <testcase name="after load, infohash calculated correctly()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.019"/>
-  <testcase name="peers are invalidated correctly()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.062"/>
+  <testcase name="client announces to tracker()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="1.146"/>
+  <testcase name="after load, infohash calculated correctly()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.01"/>
+  <testcase name="peers are invalidated correctly()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.058"/>
   <testcase name="client scrapes tracker and updates statistics()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.019"/>
-  <testcase name="after load, announce is correct()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.028"/>
-  <testcase name="after announce, client has up-to-date peer list()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.057"/>
+  <testcase name="after load, announce is correct()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.018"/>
+  <testcase name="after announce, client has up-to-date peer list()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.024"/>
   <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[מאי 19, 2020 8:28:52 אחה״צ io.mockk.impl.log.JULLogger warn
+  <system-err><![CDATA[מאי 19, 2020 8:39:26 אחה״צ io.mockk.impl.log.JULLogger warn
 WARNING: Failed to transform class java/lang/Object
 java.lang.IllegalArgumentException: Unsupported class file major version 58
 	at net.bytebuddy.jar.asm.ClassReader.<init>(ClassReader.java:184)
