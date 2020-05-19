@@ -1,5 +1,3 @@
-package il.ac.technion.cs.softwaredesign
-
 sealed class ScrapeData
 
 data class Scrape(

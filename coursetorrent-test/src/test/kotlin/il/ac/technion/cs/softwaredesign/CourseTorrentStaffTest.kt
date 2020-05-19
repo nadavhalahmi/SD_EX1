@@ -1,5 +1,8 @@
 package il.ac.technion.cs.softwaredesign
 
+import KnownPeer
+import Scrape
+import ScrapeData
 import com.google.inject.Guice
 import com.natpryce.hamkrest.*
 import com.natpryce.hamkrest.assertion.assertThat

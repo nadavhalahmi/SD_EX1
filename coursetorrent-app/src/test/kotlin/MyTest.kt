@@ -2,17 +2,16 @@ package il.ac.technion.cs.softwaredesign
 
 import Coder
 import ITorrentHTTP
-import TorrentHTTP
+import KnownPeer
+import Scrape
+import ScrapeData
 import com.google.inject.Guice
 import com.natpryce.hamkrest.*
 import com.natpryce.hamkrest.assertion.assertThat
 import dev.misfitlabs.kotlinguice4.getInstance
 import io.mockk.every
-import io.mockk.mockk
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
-import org.junit.jupiter.api.*
 
 class MyTest {
     //companion object {
@@ -20,7 +19,7 @@ class MyTest {
     private val torrent = injector.getInstance<CourseTorrent>()
     private val debian = this::class.java.getResource("/debian-10.3.0-amd64-netinst.iso.torrent").readBytes()
     private val lame = this::class.java.getResource("/lame.torrent").readBytes()
-    private val server = SimpleHttpServer()
+    //private val server = SimpleHttpServer()
     private val torrentHTTPMock = injector.getInstance<ITorrentHTTP>()
     private val testUtils = TestUtils()
     private val coder = Coder()
