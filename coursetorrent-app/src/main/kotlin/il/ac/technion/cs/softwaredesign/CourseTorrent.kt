@@ -193,13 +193,9 @@ class CourseTorrent @Inject constructor(private val dbManager: DB_Manager, priva
                     params["info_hash"] = coder.binary_encode(infohash)
                     var resp = torrentHTTP.get(scrape, params)
                     val respDict = parser.parse(resp)
-                    //TODO: UPDATE trackers db
                     val files = respDict["files"]?.value() as TorrentDict
                     val stats = files[coder.string_to_hex(infohash)]?.value() as TorrentDict?
                     dbManager.updateTracker(infohash ,tracker, stats)
-                    //dbManager.addScrape(hash = tracker, value = resp, dict = respDict) //TODO: smart merge
-//                    val files: TorrentDict = respDict["files"]?.value() as TorrentDict
-//                    val data: TorrentDict = files[coder.string_to_hex(infohash)]?.value() as TorrentDict
                 }
             }
         }

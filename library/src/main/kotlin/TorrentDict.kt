@@ -29,7 +29,7 @@ class TorrentDict() : HashMap<String, TorrentElement>(){
         return this.getValue(key).range()
     }
 
-//    fun Equals(other: Any?): Boolean { //TODO: change to equals
+//    fun Equals(other: Any?): Boolean {
 //        if(other !is Map<*, *>)
 //            return false
 //        for(key in dict.keys){

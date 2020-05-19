@@ -38,7 +38,7 @@ class Coder {
         return res.toString(Charsets.UTF_8)
     }
 
-    fun get_ip_port(bytes: ByteArray): Pair<String, Int> { //TODO: FIX
+    fun get_ip_port(bytes: ByteArray): Pair<String, Int> {
         assert(bytes.size == 6)
         var ip = bytes[0].toUByte().toString()
         for(i in 1 until 4){

@@ -6,7 +6,6 @@ class ParserTest {
     private val simpleDictRes = mapOf<String, String>("cow" to "moo", "spam" to "eggs")
     private val dictWithIntsTorrent = "d7:-twelvei-12e3:onei1ee"
     private val dictWithIntsRes = mapOf<String, Int>("-twelve" to -12, "one" to 1)
-    //TODO: check if should check this:
     //private val dictWithIntsTorrent = "d3:onei1e7:-twelvei-12ee"
     //private val dictWithIntsRes = mapOf<String, Int>( "one" to 1, "-twelve" to -12)
     private val dictOfDictsTorrent = ("d3:one"+simpleDictTorrent+ "3:two"+dictWithIntsTorrent+"e")

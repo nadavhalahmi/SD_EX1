@@ -19,7 +19,7 @@ class TorrentList() {
         lst.add(elem)
     }
 
-//    fun Equals(other: Any?): Boolean { //TODO: change to equals
+//    fun Equals(other: Any?): Boolean {
 //        if(other !is Map<*, *>)
 //            return false
 //        for(key in dict.keys){
