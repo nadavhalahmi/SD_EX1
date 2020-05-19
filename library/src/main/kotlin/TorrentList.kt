@@ -1,5 +1,5 @@
 class TorrentList() {
-    private var lst: ArrayList<TorrentElement> = ArrayList<TorrentElement>()
+    var lst: ArrayList<TorrentElement> = ArrayList<TorrentElement>()
 
     fun toList(): List<Any>{
         val res = ArrayList<Any>()

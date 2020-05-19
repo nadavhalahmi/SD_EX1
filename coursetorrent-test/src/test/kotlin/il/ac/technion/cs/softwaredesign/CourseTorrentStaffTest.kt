@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 
 class CourseTorrentStaffTest {
-    private val injector = Guice.createInjector(CourseTorrentModule())
+    private val injector = Guice.createInjector(TestModule())
     private val torrent = injector.getInstance<CourseTorrent>()
     private val debian = this::class.java.getResource("/debian-10.3.0-amd64-netinst.iso.torrent").readBytes()
     private val lame = this::class.java.getResource("/lame.torrent").readBytes()

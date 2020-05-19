@@ -196,6 +196,64 @@ class MyTest {
             }
         }
         assert(beforeSet == afterSet)
+    }
+
+    @Test
+    fun `check peers as list`() {
+        val infohash = torrent.load(lame)
+        //val infohash = torrent.load(debian)
+
+        var resp = "d8:intervali600e12:min intervali30e8:completei2e10:incompletei3e" +
+                "5:peersl" +
+                "d2:ip13:73.66.138.2174:porti8999ee" +
+                "d2:ip13:73.66.138.2174:porti63014ee" +
+                "d2:ip13:73.66.138.2174:porti8999ee" +
+                "d2:ip13:73.25.106.1804:porti6881ee" +
+                "d2:ip13:73.66.249.1414:porti8999eeee"
+
+        //not sure my ISO... and not UTF8 but it works
+        every {torrentHTTPMock.get(any(), any())} returns resp.toByteArray(Charsets.ISO_8859_1)
+        torrent.announce(infohash, TorrentEvent.STARTED, 0, 0, 2703360)
+
+
+        assertThat(
+                torrent.knownPeers(infohash),
+                anyElement(has(KnownPeer::ip, equalTo("73.66.138.217")) and has(KnownPeer::port, equalTo(8999)))
+        )
+        assertThat(
+                torrent.knownPeers(infohash),
+                anyElement(has(KnownPeer::ip, equalTo("73.66.138.217")) and has(KnownPeer::port, equalTo(63014)))
+        )
+        assertThat(
+                torrent.knownPeers(infohash),
+                anyElement(has(KnownPeer::ip, equalTo("73.66.138.217")) and has(KnownPeer::port, equalTo(8999)))
+        )
+        assertThat(
+                torrent.knownPeers(infohash),
+                anyElement(has(KnownPeer::ip, equalTo("73.25.106.180")) and has(KnownPeer::port, equalTo(6881)))
+        )
+        assertThat(
+                torrent.knownPeers(infohash),
+                anyElement(has(KnownPeer::ip, equalTo("73.66.249.141")) and has(KnownPeer::port, equalTo(8999)))
+        )
+        assertThat(
+                torrent.knownPeers(infohash), equalTo(torrent.knownPeers(infohash).distinct())
+        )
+    }
+
+    @Test
+    fun `check announce failure reason`() {
+        val infohash = torrent.load(slack)
+
+        var resp = "d14:failure reason20:unregistered torrente"
+
+        //not sure my ISO... and not UTF8 but it works
+        every {torrentHTTPMock.get(any(), any())} returns resp.toByteArray(Charsets.ISO_8859_1)
+
+        //torrent.announce(infohash, TorrentEvent.STARTED, 0, 0, 0)
+
+
+        torrent.announce(infohash, TorrentEvent.STARTED, 0, 0, 0)
 
     }
 }

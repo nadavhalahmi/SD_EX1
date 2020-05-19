@@ -75,7 +75,7 @@ class Databases @Inject constructor(private val db_factory: SecureStorageFactory
         storageManager.setValue(torrentsDB, hash, "announce-list", newAnnounce.toByteArray(charset))
     }
 
-    fun updatePeersList(hash: String, peersBytes: ByteArray, peers: ArrayList<KnownPeer>) {
+    fun updatePeersList(hash: String, peersBytes: ByteArray, peers: HashSet<KnownPeer>) {
         storageManager.setValue(torrentsDB, hash, "peers", peersBytes)
         for(peer in peers) {
             storageManager.setValid(peersDB, "$hash-${peer.ip}-${peer.port}")
