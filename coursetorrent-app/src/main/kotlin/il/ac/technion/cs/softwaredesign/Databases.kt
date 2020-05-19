@@ -61,8 +61,18 @@ class Databases @Inject constructor(private val db_factory: SecureStorageFactory
         return storageManager.getValue(torrentsDB, hash, "peers")
     }
 
-    fun updateAnnounce(announceList: List<List<String>>) {
-        //TODO: IMPLEMET
+    fun updateAnnounce(hash: String, announceList: List<List<String>>) {
+        var newAnnounce = "l"
+        for(l in announceList){
+            newAnnounce += "l"
+            for(url in l){
+                newAnnounce += url.toByteArray(charset).size.toString() + ":" +url
+            }
+            newAnnounce += "e"
+        }
+        newAnnounce += "e"
+        storageManager.setValue(torrentsDB, hash, "announce", newAnnounce.toByteArray(charset))
+        storageManager.setValue(torrentsDB, hash, "announce-list", newAnnounce.toByteArray(charset))
     }
 
     fun updatePeersList(hash: String, peersBytes: ByteArray, peers: ArrayList<KnownPeer>) {

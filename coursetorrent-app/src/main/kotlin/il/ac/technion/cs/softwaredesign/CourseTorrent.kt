@@ -123,13 +123,18 @@ class CourseTorrent @Inject constructor(private val databases: Databases, privat
             throw java.lang.IllegalArgumentException()
         val randLen = 6
         val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
-        val announceList = announces(infohash = infohash)
+        var announceList = announces(infohash = infohash)
         var respDict : TorrentDict? = null
+        var newList = announceList.toMutableList()
         if(event == TorrentEvent.STARTED) {
-            announceList.shuffled() //TODO: FIX
-            //dbManager.updateAnnounce(announceList)
+            var k = 0
+            for(i in (announceList.indices).shuffled()){
+                newList[k] = announceList[i].shuffled()
+                k++
+            }
+            databases.updateAnnounce(infohash, newList)
         }
-        for(l in announceList){
+        for(l in newList){
             for(tracker in l){
                 val params = HashMap<String, String>()
                 params["info_hash"] = coder.binary_encode(infohash)
@@ -277,10 +282,6 @@ class CourseTorrent @Inject constructor(private val databases: Databases, privat
             for(tracker in l){
                 val stats = databases.getTrackerStats(infohash, tracker)
                 if(stats != null){
-//                    val files = parser.parse()
-//                    val data: TorrentDict = files[coder.string_to_hex(infohash)]?.value() as TorrentDict
-//                    val scrape = Scrape(complete = (data["complete"]?.value() as Long).toInt(), downloaded = (data["downloaded"]?.value() as Long).toInt(),
-//                            incomplete = (data["incomplete"]?.value() as Long).toInt(), name = data["name"]?.value()?.toString())
                     res[tracker] = stats
                 }
             }

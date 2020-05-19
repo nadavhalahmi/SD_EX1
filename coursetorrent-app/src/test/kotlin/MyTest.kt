@@ -9,6 +9,7 @@ import dev.misfitlabs.kotlinguice4.getInstance
 import io.mockk.every
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
 
 class MyTest {
     //companion object {
@@ -16,6 +17,7 @@ class MyTest {
     private val torrent = injector.getInstance<CourseTorrent>()
     private val debian = this::class.java.getResource("/debian-10.3.0-amd64-netinst.iso.torrent").readBytes()
     private val lame = this::class.java.getResource("/lame.torrent").readBytes()
+    private val slack = this::class.java.getResource("/Slackware64_14.1.torrent").readBytes()
     //private val server = SimpleHttpServer()
     private val torrentHTTPMock = injector.getInstance<ITorrentHTTP>()
     private val testUtils = TestUtils()
@@ -153,5 +155,47 @@ class MyTest {
                 torrent.knownPeers(infohash),
                 anyElement(has(KnownPeer::ip, equalTo("127.0.0.22")) and has(KnownPeer::port, equalTo(6887))).not()
         )
+    }
+
+    @Test
+    fun `client recieve announce error`() {
+        val infohash = torrent.load(slack)
+
+        every {torrentHTTPMock.get(any(), any())} throws Exception("announce error")
+
+        assertThrows<Exception> { torrent.announce(infohash, TorrentEvent.STARTED, 0, 0, 0) }
+
+    }
+
+    @Test
+    fun `after shuffle still returns same announce list`() {
+        val infohash = torrent.load(slack)
+
+        var resp = "d8:intervali360e5:peers"
+        val peers = listOf(Pair("127.0.0.22", 6887))
+        resp += "6:"+ testUtils.buildPeersValueAsBinaryString(peers) + "e"
+
+        //not sure my ISO... and not UTF8 but it works
+        every {torrentHTTPMock.get(any(), any())} returns resp.toByteArray(Charsets.ISO_8859_1)
+
+        //torrent.announce(infohash, TorrentEvent.STARTED, 0, 0, 0)
+
+        val before = torrent.announces(infohash)
+        torrent.announce(infohash, TorrentEvent.STARTED, 0, 0, 0)
+        val after = torrent.announces(infohash)
+        var beforeSet = HashSet<String>()
+        var afterSet = HashSet<String>()
+        for(l in before){
+            for(s in l){
+                beforeSet.add(s)
+            }
+        }
+        for(l in after){
+            for(s in l){
+                afterSet.add(s)
+            }
+        }
+        assert(beforeSet == afterSet)
+
     }
 }

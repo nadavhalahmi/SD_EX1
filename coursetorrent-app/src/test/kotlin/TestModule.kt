@@ -15,7 +15,7 @@ class TestModule : KotlinModule() {
         bind<SecureStorageFactory>().to<MyStorageFactory>()
         bind<SecureStorage>().to<MyStorage>()
         //bind<ITorrentHTTP>().to<TorrentHTTPDummyImpl>()
-        bind<ITorrentHTTP>().toInstance(mockk<TorrentHTTP>()) //TODO: DONT forget to use real implementation
+        bind<ITorrentHTTP>().toInstance(mockk<TorrentHTTP>())
     }
 }
 
