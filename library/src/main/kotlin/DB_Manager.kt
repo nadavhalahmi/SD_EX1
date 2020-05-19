@@ -64,6 +64,24 @@ class DB_Manager @Inject constructor(private val db_factory: SecureStorageFactor
         return db.read(hash + "exists".toByteArray(charset))?.isNotEmpty() ?: false
     }
 
+    fun announceExists(hash: String): Boolean {
+        return announceExists((hash).toByteArray(charset))
+    }
+
+    fun announceExists(hash: ByteArray): Boolean {
+        val db = announceDB
+        return db.read(hash + "exists".toByteArray(charset))?.isNotEmpty() ?: false
+    }
+
+    fun scrapeExists(hash: String): Boolean {
+        return scrapeExists((hash).toByteArray(charset))
+    }
+
+    fun scrapeExists(hash: ByteArray): Boolean {
+        val db = scrapeDB
+        return db.read(hash + "exists".toByteArray(charset))?.isNotEmpty() ?: false
+    }
+
     /**
      * gets value from database
      */
@@ -82,7 +100,7 @@ class DB_Manager @Inject constructor(private val db_factory: SecureStorageFactor
     }
 
     fun getAnnounce(tracker: ByteArray, key: String = ""): ByteArray? {
-        if(!torrentExists(tracker)) return null
+        if(!announceExists(tracker)) return null
         val db = announceDB
         return db.read(tracker+key.toByteArray(charset))
     }
@@ -92,7 +110,7 @@ class DB_Manager @Inject constructor(private val db_factory: SecureStorageFactor
     }
 
     fun getScrape(hash: ByteArray, key: String = ""): ByteArray? {
-        if(!torrentExists(hash)) return null
+        if(!scrapeExists(hash)) return null
         val db = scrapeDB
         return db.read(hash+key.toByteArray(charset))
     }

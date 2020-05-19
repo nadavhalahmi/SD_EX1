@@ -16,12 +16,12 @@ class Coder {
         return formatter.toString();
     }
 
-    fun binary_encode(str: String): String{
+    fun binary_encode(str: String, simple: Boolean = false): String{
         val format_template = "%02x"
         var res = ""
         for(i in str.indices step 2){
             var c = (str[i]+""+str[i+1]).toInt(16).toChar()
-            if(c in '0'..'9' || c in 'a'..'z' || c in 'A'..'Z' || c == '.' || c == '-' || c == '_' || c == '~'){
+            if(simple || c in '0'..'9' || c in 'a'..'z' || c in 'A'..'Z' || c == '.' || c == '-' || c == '_' || c == '~'){
                 res += c
             }
             else
@@ -38,14 +38,14 @@ class Coder {
         return res.toString(Charsets.UTF_8)
     }
 
-    fun get_ip_port(bytes: ByteArray): Pair<String, Int> {
+    fun get_ip_port(bytes: ByteArray): Pair<String, Int> { //TODO: FIX
         assert(bytes.size == 6)
         var ip = bytes[0].toUByte().toString()
         for(i in 1 until 4){
             ip += "." + bytes[i].toUByte().toString()
         }
-        val port = bytes[4].toUByte().toString()+bytes[5].toUByte().toString()
-        return Pair(ip, port.toInt())
+        val port = (bytes[4].toUByte().toInt() shl 8) + bytes[5].toUByte().toInt()
+        return Pair(ip, port)
     }
 
 
