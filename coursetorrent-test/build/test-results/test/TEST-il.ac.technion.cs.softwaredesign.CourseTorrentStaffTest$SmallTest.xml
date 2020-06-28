@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="il.ac.technion.cs.softwaredesign.CourseTorrentStaffTest$SmallTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2020-06-28T19:54:24" hostname="NADAV-LAPTOP" time="26.129">
+  <properties/>
+  <testcase name="invalidate peer for non existent torrent()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentStaffTest$SmallTest" time="0.982"/>
+  <testcase name="announce for a torrent when tracker returns error()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentStaffTest$SmallTest" time="1.621"/>
+  <testcase name="scrape for unloaded info hash()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentStaffTest$SmallTest" time="0.916"/>
+  <testcase name="trackerStats for unloaded torrent()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentStaffTest$SmallTest" time="0.915"/>
+  <testcase name="scrape for a torrent with error response()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentStaffTest$SmallTest" time="1.663"/>
+  <testcase name="scrape for a torrent with a single tracker()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentStaffTest$SmallTest" time="1.658"/>
+  <testcase name="scrape for a torrent whose connection failed()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentStaffTest$SmallTest" time="2.031"/>
+  <testcase name="knownPeers for non existent hash()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentStaffTest$SmallTest" time="0.915"/>
+  <testcase name="invalidate peer removes peers when there are peers with same ip but different ports()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentStaffTest$SmallTest" time="1.719"/>
+  <testcase name="announce for a torrent with single tracker()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentStaffTest$SmallTest" time="1.467"/>
+  <testcase name="knownPeers returns a sorted list()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentStaffTest$SmallTest" time="1.859"/>
+  <testcase name="invalidate peer removes peers()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentStaffTest$SmallTest" time="2.152"/>
+  <testcase name="announce for unloaded info hash()" classname="il.ac.technion.cs.softwaredesign.CourseTorrentStaffTest$SmallTest" time="0.912"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

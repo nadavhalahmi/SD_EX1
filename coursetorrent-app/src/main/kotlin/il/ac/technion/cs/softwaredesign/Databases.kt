@@ -76,7 +76,12 @@ class Databases @Inject constructor(private val db_factory: SecureStorageFactory
     }
 
     fun updatePeersList(hash: String, peersBytes: ByteArray, peers: HashSet<KnownPeer>) {
-        storageManager.setValue(torrentsDB, hash, "peers", peersBytes)
+        val oldPeers = storageManager.getValue(torrentsDB, hash, "peers")
+        if(oldPeers === null)
+            storageManager.setValue(torrentsDB, hash, "peers", peersBytes)
+        else {
+            storageManager.setValue(torrentsDB, hash, "peers", oldPeers + peersBytes)
+        }
         for(peer in peers) {
             storageManager.setValid(peersDB, "$hash-${peer.ip}-${peer.port}")
         }
@@ -92,13 +97,23 @@ class Databases @Inject constructor(private val db_factory: SecureStorageFactory
                 //name is null by default
             }
             for(key in stats.keys) {
-                storageManager.setValue(trackersDB, hash, "$tracker-$key", (stats[key]?.value() as Long).toString().toByteArray())
+                storageManager.setValue(trackersDB, hash, "$tracker-$key", (stats[key]?.value()).toString().toByteArray())
             }
         }
     }
 
+    fun updateTrackerConnctionLost(hash: String, tracker: String) {
+        val key = "failure reason"
+        storageManager.setExists(trackersDB, "$hash-$tracker")
+        storageManager.setValue(trackersDB, hash, "$tracker-$key", "Connection failed".toByteArray())
+    }
+
     fun trackerExists(hash: String, tracker: String): Boolean {
         return storageManager.exists(trackersDB, "$hash-$tracker")
+    }
+
+    private fun trackerFailed(hash: String, tracker: String): ByteArray? {
+        return storageManager.getValue(trackersDB, "$hash-$tracker", "failure reason")
     }
 
     fun invalidatePeer(hash: String, peer: KnownPeer) {
@@ -111,15 +126,22 @@ class Databases @Inject constructor(private val db_factory: SecureStorageFactory
         return storageManager.isValid(peersDB, "$hash-${peer.ip}-${peer.port}")
     }
 
-    fun getTrackerStats(hash: String, tracker: String): Scrape? {
+    fun getTrackerStats(hash: String, tracker: String): ScrapeData? {
         //TODO: deal with tacker failed
         if(trackerExists(hash, tracker)) {
-            val complete = storageManager.getValue(trackersDB, "$hash-$tracker", "complete")?.toString(charset)!!.toInt()
-            val downloaded = storageManager.getValue(trackersDB, "$hash-$tracker", "downloaded")?.toString(charset)!!.toInt()
-            val incomplete = storageManager.getValue(trackersDB, "$hash-$tracker", "incomplete")?.toString(charset)!!.toInt()
-            val name = storageManager.getValue(trackersDB, "$hash-$tracker", "name")?.toString(charset)
-            return Scrape(complete, downloaded, incomplete, name)
+            val failMessage = trackerFailed(hash, tracker)
+            return if(failMessage === null) {
+                val complete = storageManager.getValue(trackersDB, "$hash-$tracker", "complete")?.toString(charset)!!.toInt()
+                val downloaded = storageManager.getValue(trackersDB, "$hash-$tracker", "downloaded")?.toString(charset)!!.toInt()
+                val incomplete = storageManager.getValue(trackersDB, "$hash-$tracker", "incomplete")?.toString(charset)!!.toInt()
+                val name = storageManager.getValue(trackersDB, "$hash-$tracker", "name")?.toString(charset)
+                Scrape(complete, downloaded, incomplete, name)
+            } else{
+                Failure(failMessage.toString(charset))
+            }
         }
         return null
     }
+
+
 }

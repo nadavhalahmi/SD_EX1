@@ -7,7 +7,6 @@ import TorrentList
 import TorrentParser
 import com.google.inject.Inject
 import il.ac.technion.cs.softwaredesign.exceptions.TrackerException
-import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 /**
@@ -206,11 +205,20 @@ class CourseTorrent @Inject constructor(private val databases: Databases, privat
                     val scrape = tracker.slice(0..lastIndex) + "scrape" + tracker.slice((lastIndex + "/announce".length) until tracker.length)
                     val params = HashMap<String, String>()
                     params["info_hash"] = coder.binary_encode(infohash)
-                    var resp = torrentHTTP.get(scrape, params)
-                    val respDict = parser.parse(resp)
-                    val files = respDict["files"]?.value() as TorrentDict
-                    val stats = files[coder.string_to_hex(infohash)]?.value() as TorrentDict?
-                    databases.updateTracker(infohash ,tracker, stats)
+                    try {
+                        var resp = torrentHTTP.get(scrape, params)
+                        val respDict = parser.parse(resp)
+                        if (respDict["failure reason"] !== null) {
+                            databases.updateTracker(infohash, tracker, respDict)
+                        } else {
+                            val files = respDict["files"]?.value() as TorrentDict
+                            //val stats = files[coder.string_to_hex(infohash)]?.value() as TorrentDict?
+                            val stats = files[infohash]?.value() as TorrentDict?
+                            databases.updateTracker(infohash, tracker, stats)
+                        }
+                    }catch (e: Exception){
+                        databases.updateTrackerConnctionLost(infohash, tracker)
+                    }
                 }
             }
         }
@@ -248,7 +256,7 @@ class CourseTorrent @Inject constructor(private val databases: Databases, privat
         if(!databases.torrentExists(infohash))
             throw java.lang.IllegalArgumentException()
         val res = HashSet<KnownPeer>()
-        val peersBytes = databases.getPeers(infohash)
+        var peersBytes = databases.getPeers(infohash)
         if(peersBytes != null) {
             if(peersBytes[0].toChar() == 'l'){
                 val peersList = parser.parseList(peersBytes).value() as TorrentList
@@ -261,13 +269,17 @@ class CourseTorrent @Inject constructor(private val databases: Databases, privat
                         res.add(peer)
                 }
             } else {
-                val start = (parser.parseBytes(peersBytes) { peersBytes[it].toChar() == ':' }).length + 1
-                val end = peersBytes.size
-                for (i in start until end step 6) {
-                    val (ip, port) = coder.get_ip_port(peersBytes.copyOfRange(i, i + 6))
-                    val peer = KnownPeer(ip, port, null)
-                    if(databases.peerIsValid(infohash, peer))
-                        res.add(peer)
+                while(peersBytes!!.isNotEmpty()) {
+                    val bytesLength = (parser.parseBytes(peersBytes) { peersBytes!![it].toChar() == ':' }).toLong()
+                    val start = bytesLength.toString().length + 1
+                    val end = start + bytesLength.toInt()
+                    for (i in start until end step 6) {
+                        val (ip, port) = coder.get_ip_port(peersBytes.copyOfRange(i, i + 6))
+                        val peer = KnownPeer(ip, port, null)
+                        if (databases.peerIsValid(infohash, peer))
+                            res.add(peer)
+                    }
+                    peersBytes = peersBytes.copyOfRange(end, peersBytes.size)
                 }
             }
         }

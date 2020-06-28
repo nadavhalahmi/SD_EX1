@@ -253,7 +253,7 @@ class MyTest {
         //torrent.announce(infohash, TorrentEvent.STARTED, 0, 0, 0)
 
 
-        torrent.announce(infohash, TorrentEvent.STARTED, 0, 0, 0)
+        assertThrows<Exception> { torrent.announce(infohash, TorrentEvent.STARTED, 0, 0, 0) }
 
     }
 }

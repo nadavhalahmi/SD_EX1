@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="il.ac.technion.cs.softwaredesign.MyTest" tests="1" skipped="0" failures="1" errors="0" timestamp="2020-05-19T20:56:24" hostname="TP13-01" time="1.046">
+<testsuite name="il.ac.technion.cs.softwaredesign.MyTest" tests="10" skipped="0" failures="1" errors="0" timestamp="2020-06-28T19:51:29" hostname="NADAV-LAPTOP" time="1.51">
   <properties/>
-  <testcase name="check announce failure reason()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="1.046">
-    <failure message="il.ac.technion.cs.softwaredesign.exceptions.TrackerException: unregistered torrent" type="il.ac.technion.cs.softwaredesign.exceptions.TrackerException">il.ac.technion.cs.softwaredesign.exceptions.TrackerException: unregistered torrent
-	at il.ac.technion.cs.softwaredesign.CourseTorrent.announce(CourseTorrent.kt:182)
-	at il.ac.technion.cs.softwaredesign.MyTest.check announce failure reason(MyTest.kt:256)
+  <testcase name="client announces to tracker()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="1.207"/>
+  <testcase name="check peers as list()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.059"/>
+  <testcase name="after load, infohash calculated correctly()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.01"/>
+  <testcase name="check announce failure reason()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.037"/>
+  <testcase name="peers are invalidated correctly()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.028"/>
+  <testcase name="client scrapes tracker and updates statistics()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.015">
+    <failure message="java.lang.AssertionError: expected: a value that is equal to {&quot;https://127.0.0.1:8082/announce&quot;:Scrape(complete=0, downloaded=0, incomplete=0, name=null)}&#10;but was: {}" type="java.lang.AssertionError">java.lang.AssertionError: expected: a value that is equal to {&quot;https://127.0.0.1:8082/announce&quot;:Scrape(complete=0, downloaded=0, incomplete=0, name=null)}
+but was: {}
+	at com.natpryce.hamkrest.assertion.AssertKt.assertThat(assert.kt:19)
+	at com.natpryce.hamkrest.assertion.AssertKt.assertThat$default(assert.kt:16)
+	at il.ac.technion.cs.softwaredesign.MyTest.client scrapes tracker and updates statistics(MyTest.kt:85)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -95,8 +102,12 @@
 	at java.base/java.lang.Thread.run(Thread.java:832)
 </failure>
   </testcase>
+  <testcase name="after shuffle still returns same announce list()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.01"/>
+  <testcase name="after load, announce is correct()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.017"/>
+  <testcase name="after announce, client has up-to-date peer list()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.021"/>
+  <testcase name="client recieve announce error()" classname="il.ac.technion.cs.softwaredesign.MyTest" time="0.011"/>
   <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[מאי 19, 2020 11:56:23 אחה״צ io.mockk.impl.log.JULLogger warn
+  <system-err><![CDATA[Jun 28, 2020 10:51:28 PM io.mockk.impl.log.JULLogger warn
 WARNING: Failed to transform class java/lang/Object
 java.lang.IllegalArgumentException: Unsupported class file major version 58
 	at net.bytebuddy.jar.asm.ClassReader.<init>(ClassReader.java:184)
